@@ -832,24 +832,65 @@ async function loadCommandPassRewards() {
         const card = document.createElement("div");
 
         card.className = `pass-card ${reward.rarity}`;
+      
+const rewardImage =
+    reward.image_url ||
+    reward.icon_url ||
+    "";
 
-        card.innerHTML = `
-            <div class="pass-level">
-                Lv ${reward.reward_level}
-            </div>
+const fallbackIcons = {
+    avatar: "👤",
+    frame: "🖼️",
+    badge: "🏅",
+    title: "🏷️",
+    background: "🌄",
+    theme: "🎨",
+    currency: "🪙",
+    xp: "⭐",
+    crate: "🎁",
+    consumable: "🧰",
+    boost: "⚡"
+};
 
-            <div class="pass-track">
-                ${reward.reward_track.toUpperCase()}
-            </div>
+const fallbackIcon =
+    fallbackIcons[reward.item_type] || "🎁";
 
-            <div class="pass-name">
-                ${reward.item_name}
-            </div>
+card.innerHTML = `
+    <div class="pass-level">
+        LV ${reward.reward_level}
+    </div>
 
-            <div class="pass-type">
-                ${reward.item_type}
-            </div>
-        `;
+    <div class="pass-track">
+        ${reward.reward_track.toUpperCase()}
+    </div>
+
+    <div class="pass-reward-art">
+        ${
+            rewardImage
+                ? `<img
+                    src="${rewardImage}"
+                    alt="${reward.item_name}"
+                    loading="lazy"
+                  >`
+                : `<span class="pass-fallback-icon">
+                    ${fallbackIcon}
+                  </span>`
+        }
+    </div>
+
+    <div class="pass-name">
+        ${reward.item_name}
+    </div>
+
+    <div class="pass-rarity">
+        ${reward.rarity}
+    </div>
+
+    <div class="pass-type">
+        ${reward.item_type}
+    </div>
+`;
+  
 
         container.appendChild(card);
 
