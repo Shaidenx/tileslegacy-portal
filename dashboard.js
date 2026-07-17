@@ -13,23 +13,23 @@
 const SUPABASE_URL =
   "https://pucwtnzzmlnoviiwijtq.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
+const SUPABASE_KEY =
   "sb_publishable_8n03gOCffWC9ihQQ7lb2Mg_KVNTls8S";
 
 const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
+  SUPABASE_KEY
 );
 
 
 /* =========================================================
-   PAGE ELEMENTS
+   DASHBOARD ELEMENTS
 ========================================================= */
 
-const elements = {
+const dashboardElements = {
   loading: document.getElementById("dashboardLoading"),
   loginRequired: document.getElementById("loginRequired"),
-  dashboard: document.getElementById("dashboardInterface"),
+  interface: document.getElementById("dashboardInterface"),
 
   logoutButton: document.getElementById("logoutButton"),
 
@@ -45,25 +45,13 @@ const elements = {
 
   commanderPassLevel:
     document.getElementById("commanderPassLevel"),
+
   summaryPassLevel:
     document.getElementById("summaryPassLevel"),
   summaryPassType:
     document.getElementById("summaryPassType"),
   summaryPassTypeSecondary:
     document.getElementById("summaryPassTypeSecondary"),
-
-  passLevelNumber:
-    document.getElementById("passLevelNumber"),
-  passXpText:
-    document.getElementById("passXpText"),
-  passProgressPercent:
-    document.getElementById("passProgressPercent"),
-  passProgressTrack:
-    document.getElementById("passProgressTrack"),
-  passProgressBar:
-    document.getElementById("passProgressBar"),
-  nextRewardText:
-    document.getElementById("nextRewardText"),
 
   summaryCollectionCount:
     document.getElementById("summaryCollectionCount"),
@@ -81,6 +69,19 @@ const elements = {
 
   summaryPrestigeLevel:
     document.getElementById("summaryPrestigeLevel"),
+
+  passLevelNumber:
+    document.getElementById("passLevelNumber"),
+  passXpText:
+    document.getElementById("passXpText"),
+  passProgressPercent:
+    document.getElementById("passProgressPercent"),
+  passProgressTrack:
+    document.getElementById("passProgressTrack"),
+  passProgressBar:
+    document.getElementById("passProgressBar"),
+  nextRewardText:
+    document.getElementById("nextRewardText"),
 
   dailyXpAvailable:
     document.getElementById("dailyXpAvailable"),
@@ -108,8 +109,7 @@ const elements = {
   quickAchievementsButton:
     document.getElementById("quickAchievementsButton"),
 
-  modal:
-    document.getElementById("dashboardModal"),
+  modal: document.getElementById("dashboardModal"),
   modalBackdrop:
     document.getElementById("dashboardModalBackdrop"),
   modalClose:
@@ -126,55 +126,23 @@ const elements = {
 
 
 /* =========================================================
-   VISIBILITY CONTROL
+   BASIC HELPERS
 ========================================================= */
 
-function hideElement(element) {
-  if (element) {
-    element.classList.add("hidden");
-  }
+function setText(element, value) {
+  if (!element) return;
+
+  element.textContent =
+    value === undefined || value === null
+      ? ""
+      : String(value);
 }
 
-function showElement(element) {
-  if (element) {
-    element.classList.remove("hidden");
-  }
-}
+function getFirstValue(source, keys, fallback = null) {
+  if (!source) return fallback;
 
-function hideEveryState() {
-  hideElement(elements.loading);
-  hideElement(elements.loginRequired);
-  hideElement(elements.dashboard);
-  hideElement(elements.modal);
-}
-
-function showLoadingState() {
-  hideEveryState();
-  showElement(elements.loading);
-}
-
-function showLoginState() {
-  hideEveryState();
-  showElement(elements.loginRequired);
-}
-
-function showDashboardState() {
-  hideEveryState();
-  showElement(elements.dashboard);
-}
-
-
-/* =========================================================
-   SAFE VALUE HELPERS
-========================================================= */
-
-function firstAvailable(object, fields, fallback = null) {
-  if (!object) {
-    return fallback;
-  }
-
-  for (const field of fields) {
-    const value = object[field];
+  for (const key of keys) {
+    const value = source[key];
 
     if (
       value !== undefined &&
@@ -188,51 +156,96 @@ function firstAvailable(object, fields, fallback = null) {
   return fallback;
 }
 
-function setText(element, value) {
-  if (element) {
-    element.textContent = String(value);
-  }
-}
+function clamp(value, minimum, maximum) {
+  const number = Number(value) || 0;
 
-function createCommanderInitial(name) {
-  const cleanedName = String(name || "Commander").trim();
-
-  if (!cleanedName) {
-    return "C";
-  }
-
-  return cleanedName.charAt(0).toUpperCase();
-}
-
-function clamp(number, minimum, maximum) {
   return Math.min(
-    Math.max(Number(number) || 0, minimum),
+    Math.max(number, minimum),
     maximum
   );
 }
 
+function createInitial(name) {
+  const safeName = String(name || "Commander").trim();
+
+  return safeName
+    ? safeName.charAt(0).toUpperCase()
+    : "C";
+}
+
 
 /* =========================================================
-   PROFILE
+   PAGE STATE CONTROL
+========================================================= */
+
+function hideElement(element) {
+  if (!element) return;
+
+  element.hidden = true;
+  element.classList.add("hidden");
+  element.style.display = "none";
+}
+
+function showElement(element) {
+  if (!element) return;
+
+  element.hidden = false;
+  element.classList.remove("hidden");
+  element.style.removeProperty("display");
+}
+
+function hideAllDashboardStates() {
+  hideElement(dashboardElements.loading);
+  hideElement(dashboardElements.loginRequired);
+  hideElement(dashboardElements.interface);
+}
+
+function showLoadingState() {
+  hideAllDashboardStates();
+  showElement(dashboardElements.loading);
+
+  if (dashboardElements.logoutButton) {
+    dashboardElements.logoutButton.hidden = true;
+  }
+}
+
+function showLoginState() {
+  hideAllDashboardStates();
+  showElement(dashboardElements.loginRequired);
+
+  if (dashboardElements.logoutButton) {
+    dashboardElements.logoutButton.hidden = true;
+  }
+}
+
+function showAuthenticatedState() {
+  hideAllDashboardStates();
+  showElement(dashboardElements.interface);
+
+  if (dashboardElements.logoutButton) {
+    dashboardElements.logoutButton.hidden = false;
+  }
+}
+
+
+/* =========================================================
+   COMMANDER PROFILE
 ========================================================= */
 
 async function loadCommanderProfile(user) {
   let profile = null;
 
   try {
-    const response = await supabaseClient
+    const { data, error } = await supabaseClient
       .from("profiles")
       .select("*")
       .eq("id", user.id)
       .maybeSingle();
 
-    if (response.error) {
-      console.warn(
-        "Profile could not be loaded:",
-        response.error.message
-      );
+    if (error) {
+      console.warn("Profile load warning:", error.message);
     } else {
-      profile = response.data;
+      profile = data;
     }
   } catch (error) {
     console.warn("Profile request failed:", error);
@@ -240,99 +253,120 @@ async function loadCommanderProfile(user) {
 
   const metadata = user.user_metadata || {};
 
-  const commanderName = firstAvailable(
+  const commanderName = getFirstValue(
     profile,
     [
       "commander_name",
       "display_name",
       "username",
+      "full_name",
       "name"
     ],
-    firstAvailable(
+    getFirstValue(
       metadata,
       [
         "commander_name",
         "display_name",
         "username",
-        "name",
-        "full_name"
+        "full_name",
+        "name"
       ],
       "Commander"
     )
   );
 
-  const commanderTitle = firstAvailable(
+  const commanderTitle = getFirstValue(
     profile,
     [
-      "commander_title",
       "equipped_title",
+      "commander_title",
       "title"
     ],
     "Survivor"
   );
 
-  const avatarUrl = firstAvailable(
+  const avatarUrl = getFirstValue(
     profile,
     [
       "avatar_url",
+      "profile_image_url",
       "profile_image",
       "image_url"
     ],
-    firstAvailable(
+    getFirstValue(
       metadata,
-      ["avatar_url", "picture"],
+      [
+        "avatar_url",
+        "picture"
+      ],
       null
     )
   );
 
-  updateCommanderIdentity({
-    name: commanderName,
-    title: commanderTitle,
+  renderCommanderProfile({
+    commanderName,
+    commanderTitle,
     avatarUrl
   });
-
-  return profile;
 }
 
-function updateCommanderIdentity({
-  name,
-  title,
+function renderCommanderProfile({
+  commanderName,
+  commanderTitle,
   avatarUrl
 }) {
-  const safeName = name || "Commander";
-  const safeTitle = title || "Survivor";
+  const safeName = commanderName || "Commander";
+  const safeTitle = commanderTitle || "Survivor";
 
-  setText(elements.commanderName, safeName);
-  setText(elements.commanderDisplayName, safeName);
-  setText(elements.commanderTitle, safeTitle);
   setText(
-    elements.commanderInitial,
-    createCommanderInitial(safeName)
+    dashboardElements.commanderName,
+    safeName
   );
 
-  if (elements.commanderAvatar && avatarUrl) {
-    const safeUrl = String(avatarUrl);
+  setText(
+    dashboardElements.commanderDisplayName,
+    safeName
+  );
 
-    elements.commanderAvatar.innerHTML = "";
+  setText(
+    dashboardElements.commanderTitle,
+    safeTitle
+  );
+
+  setText(
+    dashboardElements.commanderInitial,
+    createInitial(safeName)
+  );
+
+  if (
+    dashboardElements.commanderAvatar &&
+    avatarUrl
+  ) {
+    const avatarContainer =
+      dashboardElements.commanderAvatar;
+
+    avatarContainer.innerHTML = "";
 
     const image = document.createElement("img");
-    image.src = safeUrl;
-    image.alt = `${safeName} commander avatar`;
+
+    image.src = String(avatarUrl);
+    image.alt = `${safeName} avatar`;
     image.loading = "lazy";
 
     image.addEventListener("error", () => {
-      elements.commanderAvatar.innerHTML = "";
+      avatarContainer.innerHTML = "";
 
       const initial = document.createElement("span");
-      initial.id = "commanderInitial";
-      initial.textContent =
-        createCommanderInitial(safeName);
 
-      elements.commanderAvatar.appendChild(initial);
-      elements.commanderInitial = initial;
+      initial.id = "commanderInitial";
+      initial.textContent = createInitial(safeName);
+
+      avatarContainer.appendChild(initial);
+
+      dashboardElements.commanderInitial = initial;
     });
 
-    elements.commanderAvatar.appendChild(image);
+    avatarContainer.appendChild(image);
   }
 }
 
@@ -341,97 +375,109 @@ function updateCommanderIdentity({
    COMMAND PASS
 ========================================================= */
 
-async function loadCommandPass(user) {
-  let passRecord = null;
+async function loadCommandPass() {
+  let commandPass = null;
 
-  const possibleTables = [
-    "command_pass_progress",
-    "command_passes",
-    "command_pass"
-  ];
+  try {
+    const { data, error } = await supabaseClient
+      .from("command_pass")
+      .select("*")
+      .limit(1)
+      .maybeSingle();
 
-  for (const tableName of possibleTables) {
-    try {
-      const response = await supabaseClient
-        .from(tableName)
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      if (!response.error && response.data) {
-        passRecord = response.data;
-        break;
-      }
-    } catch (error) {
+    if (error) {
       console.warn(
-        `Could not check ${tableName}:`,
-        error
+        "Command Pass load warning:",
+        error.message
       );
+    } else {
+      commandPass = data;
     }
+  } catch (error) {
+    console.warn(
+      "Command Pass request failed:",
+      error
+    );
   }
 
   const level = Number(
-    firstAvailable(
-      passRecord,
-      ["level", "pass_level", "current_level"],
+    getFirstValue(
+      commandPass,
+      [
+        "current_level",
+        "pass_level",
+        "level"
+      ],
       1
     )
   );
 
   const currentXp = Number(
-    firstAvailable(
-      passRecord,
-      ["xp", "current_xp", "season_xp"],
+    getFirstValue(
+      commandPass,
+      [
+        "current_xp",
+        "season_xp",
+        "xp"
+      ],
       0
     )
   );
 
   const requiredXp = Number(
-    firstAvailable(
-      passRecord,
+    getFirstValue(
+      commandPass,
       [
         "xp_required",
-        "next_level_xp",
-        "required_xp"
+        "required_xp",
+        "next_level_xp"
       ],
       100
     )
   );
 
-  const passType = firstAvailable(
-    passRecord,
-    ["pass_type", "track", "tier"],
+  const passType = getFirstValue(
+    commandPass,
+    [
+      "pass_type",
+      "track_name",
+      "track",
+      "tier"
+    ],
     "Free Pass"
   );
 
-  const prestige = Number(
-    firstAvailable(
-      passRecord,
-      ["prestige_level", "prestige"],
+  const prestigeLevel = Number(
+    getFirstValue(
+      commandPass,
+      [
+        "prestige_level",
+        "prestige"
+      ],
       0
     )
   );
 
-  updateCommandPass({
+  renderCommandPass({
     level,
     currentXp,
     requiredXp,
     passType,
-    prestige
+    prestigeLevel
   });
 }
 
-function updateCommandPass({
+function renderCommandPass({
   level,
   currentXp,
   requiredXp,
   passType,
-  prestige
+  prestigeLevel
 }) {
   const safeRequiredXp =
     requiredXp > 0 ? requiredXp : 100;
 
-  const percentage = clamp(
+  const progressPercent = clamp(
     Math.round(
       (currentXp / safeRequiredXp) * 100
     ),
@@ -439,64 +485,74 @@ function updateCommandPass({
     100
   );
 
+  const remainingXp = Math.max(
+    safeRequiredXp - currentXp,
+    0
+  );
+
   setText(
-    elements.commanderPassLevel,
+    dashboardElements.commanderPassLevel,
     `Level ${level}`
   );
 
   setText(
-    elements.summaryPassLevel,
+    dashboardElements.summaryPassLevel,
     `Level ${level}`
   );
 
   setText(
-    elements.summaryPassType,
+    dashboardElements.summaryPassType,
     passType
   );
 
   setText(
-    elements.summaryPassTypeSecondary,
+    dashboardElements.summaryPassTypeSecondary,
     passType
   );
 
   setText(
-    elements.passLevelNumber,
+    dashboardElements.summaryPrestigeLevel,
+    `Level ${prestigeLevel}`
+  );
+
+  setText(
+    dashboardElements.passLevelNumber,
     level
   );
 
   setText(
-    elements.passXpText,
+    dashboardElements.passXpText,
     `${currentXp} / ${safeRequiredXp} XP`
   );
 
   setText(
-    elements.passProgressPercent,
-    `${percentage}%`
+    dashboardElements.passProgressPercent,
+    `${progressPercent}%`
   );
 
-  setText(
-    elements.summaryPrestigeLevel,
-    `Level ${prestige}`
-  );
-
-  if (elements.passProgressBar) {
-    elements.passProgressBar.style.width =
-      `${percentage}%`;
+  if (dashboardElements.passProgressBar) {
+    dashboardElements.passProgressBar.style.width =
+      `${progressPercent}%`;
   }
 
-  if (elements.passProgressTrack) {
-    elements.passProgressTrack.setAttribute(
+  if (dashboardElements.passProgressTrack) {
+    dashboardElements.passProgressTrack.setAttribute(
       "aria-valuenow",
-      String(percentage)
+      String(progressPercent)
     );
   }
 
-  setText(
-    elements.nextRewardText,
-    percentage >= 100
-      ? "Your next Command Pass reward is ready."
-      : `${safeRequiredXp - currentXp} XP until your next reward.`
-  );
+  if (progressPercent >= 100) {
+    setText(
+      dashboardElements.nextRewardText,
+      "Your next Command Pass reward is ready."
+    );
+  } else {
+    setText(
+      dashboardElements.nextRewardText,
+      `${remainingXp} XP until your next reward.`
+    );
+  }
 }
 
 
@@ -504,43 +560,43 @@ function updateCommandPass({
    COLLECTION
 ========================================================= */
 
-async function loadCollection(user) {
-  let count = 0;
+async function loadCollection() {
+  let collectionCount = 0;
 
-  const possibleTables = [
-    "inventory",
-    "user_inventory",
-    "collections"
-  ];
+  try {
+    const { count, error } = await supabaseClient
+      .from("inventory")
+      .select("*", {
+        count: "exact",
+        head: true
+      });
 
-  for (const tableName of possibleTables) {
-    try {
-      const response = await supabaseClient
-        .from(tableName)
-        .select("*", {
-          count: "exact",
-          head: true
-        })
-        .eq("user_id", user.id);
-
-      if (!response.error) {
-        count = response.count || 0;
-        break;
-      }
-    } catch (error) {
+    if (error) {
       console.warn(
-        `Could not count ${tableName}:`,
-        error
+        "Inventory count warning:",
+        error.message
       );
+    } else {
+      collectionCount = count || 0;
     }
+  } catch (error) {
+    console.warn(
+      "Inventory request failed:",
+      error
+    );
   }
 
   setText(
-    elements.summaryCollectionCount,
-    `${count} ${count === 1 ? "Item" : "Items"}`
+    dashboardElements.summaryCollectionCount,
+    `${collectionCount} ${
+      collectionCount === 1 ? "Item" : "Items"
+    }`
   );
 
-  setText(elements.collectionCountLarge, count);
+  setText(
+    dashboardElements.collectionCountLarge,
+    collectionCount
+  );
 }
 
 
@@ -548,183 +604,47 @@ async function loadCollection(user) {
    ACHIEVEMENTS
 ========================================================= */
 
-async function loadAchievements(user) {
-  let achievements = [];
-
-  const possibleTables = [
-    "user_achievements",
-    "achievements_unlocked",
-    "commander_achievements"
-  ];
-
-  for (const tableName of possibleTables) {
-    try {
-      const response = await supabaseClient
-        .from(tableName)
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (
-        !response.error &&
-        Array.isArray(response.data)
-      ) {
-        achievements = response.data;
-        break;
-      }
-    } catch (error) {
-      console.warn(
-        `Could not load ${tableName}:`,
-        error
-      );
-    }
-  }
-
-  const unlockedCount = achievements.length;
-
-  const achievementPoints =
-    achievements.reduce((total, achievement) => {
-      const points = Number(
-        firstAvailable(
-          achievement,
-          ["points", "achievement_points"],
-          0
-        )
-      );
-
-      return total + points;
-    }, 0);
+function loadAchievements() {
+  const unlockedCount = 0;
+  const totalPoints = 0;
 
   setText(
-    elements.summaryAchievementCount,
+    dashboardElements.summaryAchievementCount,
     `${unlockedCount} Unlocked`
   );
 
   setText(
-    elements.summaryAchievementPoints,
-    `${achievementPoints} Points`
+    dashboardElements.summaryAchievementPoints,
+    `${totalPoints} Points`
   );
 
   setText(
-    elements.achievementCountLarge,
+    dashboardElements.achievementCountLarge,
     unlockedCount
   );
 
   setText(
-    elements.achievementPointsLarge,
-    achievementPoints
+    dashboardElements.achievementPointsLarge,
+    totalPoints
   );
 }
 
 
 /* =========================================================
-   MISSIONS
+   DAILY MISSIONS
 ========================================================= */
 
-function showEmptyMissions() {
-  if (elements.missionsList) {
-    elements.missionsList.innerHTML = "";
+function loadDailyMissions() {
+  if (dashboardElements.missionsList) {
+    dashboardElements.missionsList.innerHTML = "";
   }
-
-  setText(elements.dailyXpAvailable, "0 XP");
-  showElement(elements.missionsEmpty);
-}
-
-async function loadMissions(user) {
-  let missions = [];
-
-  const possibleTables = [
-    "daily_missions",
-    "user_missions",
-    "missions"
-  ];
-
-  for (const tableName of possibleTables) {
-    try {
-      const response = await supabaseClient
-        .from(tableName)
-        .select("*")
-        .eq("user_id", user.id);
-
-      if (
-        !response.error &&
-        Array.isArray(response.data) &&
-        response.data.length
-      ) {
-        missions = response.data;
-        break;
-      }
-    } catch (error) {
-      console.warn(
-        `Could not load ${tableName}:`,
-        error
-      );
-    }
-  }
-
-  if (!missions.length) {
-    showEmptyMissions();
-    return;
-  }
-
-  hideElement(elements.missionsEmpty);
-  elements.missionsList.innerHTML = "";
-
-  let totalXp = 0;
-
-  missions.forEach((mission) => {
-    const title = firstAvailable(
-      mission,
-      ["title", "mission_name", "name"],
-      "Legacy Mission"
-    );
-
-    const description = firstAvailable(
-      mission,
-      ["description", "details"],
-      "Complete this mission to earn Command Pass XP."
-    );
-
-    const xpReward = Number(
-      firstAvailable(
-        mission,
-        ["xp_reward", "reward_xp", "xp"],
-        0
-      )
-    );
-
-    totalXp += xpReward;
-
-    const missionCard =
-      document.createElement("article");
-
-    missionCard.className = "mission-card";
-
-    missionCard.innerHTML = `
-      <div>
-        <h3></h3>
-        <p></p>
-      </div>
-
-      <strong class="mission-xp"></strong>
-    `;
-
-    missionCard.querySelector("h3").textContent =
-      title;
-
-    missionCard.querySelector("p").textContent =
-      description;
-
-    missionCard.querySelector(
-      ".mission-xp"
-    ).textContent = `+${xpReward} XP`;
-
-    elements.missionsList.appendChild(missionCard);
-  });
 
   setText(
-    elements.dailyXpAvailable,
-    `${totalXp} XP`
+    dashboardElements.dailyXpAvailable,
+    "0 XP"
   );
+
+  showElement(dashboardElements.missionsEmpty);
 }
 
 
@@ -734,17 +654,22 @@ async function loadMissions(user) {
 
 function loadRecentReward() {
   setText(
-    elements.recentRewardType,
+    dashboardElements.recentRewardArt,
+    "🎁"
+  );
+
+  setText(
+    dashboardElements.recentRewardType,
     "No reward collected"
   );
 
   setText(
-    elements.recentRewardName,
+    dashboardElements.recentRewardName,
     "Your first reward is waiting"
   );
 
   setText(
-    elements.recentRewardSource,
+    dashboardElements.recentRewardSource,
     "Progress through the Command Pass and complete missions to begin building your collection."
   );
 }
@@ -760,73 +685,86 @@ function openDashboardModal({
   message =
     "This Tiles Legacy feature is currently being activated."
 } = {}) {
-  setText(elements.modalIcon, icon);
-  setText(elements.modalTitle, title);
-  setText(elements.modalMessage, message);
+  setText(
+    dashboardElements.modalIcon,
+    icon
+  );
 
-  showElement(elements.modal);
+  setText(
+    dashboardElements.modalTitle,
+    title
+  );
+
+  setText(
+    dashboardElements.modalMessage,
+    message
+  );
+
+  showElement(dashboardElements.modal);
 
   document.body.style.overflow = "hidden";
 }
 
 function closeDashboardModal() {
-  hideElement(elements.modal);
-  document.body.style.overflow = "";
+  hideElement(dashboardElements.modal);
+
+  document.body.style.removeProperty("overflow");
 }
 
-function connectFeatureButtons() {
+function connectModalControls() {
   const collectionButtons = [
-    elements.viewCollectionButton,
-    elements.quickCollectionButton
+    dashboardElements.viewCollectionButton,
+    dashboardElements.quickCollectionButton
   ];
 
-  collectionButtons.forEach((button) => {
-    button?.addEventListener("click", () => {
+  for (const button of collectionButtons) {
+    if (!button) continue;
+
+    button.addEventListener("click", () => {
       openDashboardModal({
         icon: "🎒",
         title: "Collection Coming Soon",
         message:
-          "The Commander Collection is being prepared. Your avatars, frames, badges, titles, and permanent rewards will appear here."
+          "Your Commander Collection will contain permanent avatars, frames, badges, titles, and seasonal rewards."
       });
     });
-  });
+  }
 
   const achievementButtons = [
-    elements.viewAchievementsButton,
-    elements.quickAchievementsButton
+    dashboardElements.viewAchievementsButton,
+    dashboardElements.quickAchievementsButton
   ];
 
-  achievementButtons.forEach((button) => {
-    button?.addEventListener("click", () => {
+  for (const button of achievementButtons) {
+    if (!button) continue;
+
+    button.addEventListener("click", () => {
       openDashboardModal({
         icon: "🏆",
         title: "Achievements Coming Soon",
         message:
-          "The Legacy Achievement system is being activated. Your milestones, points, and permanent accomplishments will appear here."
+          "Your Legacy achievements, milestones, and achievement points will appear here when the achievement system launches."
       });
     });
-  });
+  }
 
-  elements.modalClose?.addEventListener(
+  dashboardElements.modalClose?.addEventListener(
     "click",
     closeDashboardModal
   );
 
-  elements.modalAction?.addEventListener(
+  dashboardElements.modalAction?.addEventListener(
     "click",
     closeDashboardModal
   );
 
-  elements.modalBackdrop?.addEventListener(
+  dashboardElements.modalBackdrop?.addEventListener(
     "click",
     closeDashboardModal
   );
 
-  document.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Escape" &&
-      !elements.modal?.classList.contains("hidden")
-    ) {
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
       closeDashboardModal();
     }
   });
@@ -838,16 +776,12 @@ function connectFeatureButtons() {
 ========================================================= */
 
 async function logoutCommander() {
-  if (!elements.logoutButton) {
-    return;
+  const button = dashboardElements.logoutButton;
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Logging Out...";
   }
-
-  const originalText =
-    elements.logoutButton.textContent;
-
-  elements.logoutButton.disabled = true;
-  elements.logoutButton.textContent =
-    "Logging Out...";
 
   try {
     const { error } =
@@ -857,40 +791,63 @@ async function logoutCommander() {
       throw error;
     }
 
-    window.location.href = "index.html";
+    window.location.replace("index.html");
   } catch (error) {
     console.error("Logout failed:", error);
 
-    elements.logoutButton.disabled = false;
-    elements.logoutButton.textContent =
-      originalText;
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Log Out";
+    }
 
     openDashboardModal({
       icon: "⚠️",
       title: "Logout Failed",
       message:
-        "The Commander Network could not complete the logout request. Please try again."
+        "The Legacy Command Network could not complete your logout request. Please try again."
     });
   }
 }
 
 
 /* =========================================================
-   DASHBOARD INITIALIZATION
+   AUTHENTICATED DASHBOARD
+========================================================= */
+
+async function loadAuthenticatedDashboard(user) {
+  await loadCommanderProfile(user);
+
+  showAuthenticatedState();
+
+  await Promise.allSettled([
+    loadCommandPass(),
+    loadCollection()
+  ]);
+
+  loadAchievements();
+  loadDailyMissions();
+  loadRecentReward();
+}
+
+
+/* =========================================================
+   INITIALIZATION
 ========================================================= */
 
 async function initializeDashboard() {
+  hideElement(dashboardElements.modal);
   showLoadingState();
-  connectFeatureButtons();
 
-  elements.logoutButton?.addEventListener(
+  connectModalControls();
+
+  dashboardElements.logoutButton?.addEventListener(
     "click",
     logoutCommander
   );
 
   try {
     const {
-      data: { session },
+      data,
       error
     } = await supabaseClient.auth.getSession();
 
@@ -898,25 +855,16 @@ async function initializeDashboard() {
       throw error;
     }
 
+    const session = data?.session;
+
     if (!session?.user) {
       showLoginState();
       return;
     }
 
-    const user = session.user;
-
-    await loadCommanderProfile(user);
-
-    showDashboardState();
-
-    await Promise.allSettled([
-      loadCommandPass(user),
-      loadCollection(user),
-      loadAchievements(user),
-      loadMissions(user)
-    ]);
-
-    loadRecentReward();
+    await loadAuthenticatedDashboard(
+      session.user
+    );
   } catch (error) {
     console.error(
       "Dashboard initialization failed:",
@@ -933,19 +881,25 @@ async function initializeDashboard() {
 ========================================================= */
 
 supabaseClient.auth.onAuthStateChange(
-  (event, session) => {
-    if (
-      event === "SIGNED_OUT" ||
-      !session
-    ) {
+  async (event, session) => {
+    if (event === "SIGNED_OUT" || !session) {
       showLoginState();
+      return;
+    }
+
+    if (event === "SIGNED_IN") {
+      showLoadingState();
+
+      await loadAuthenticatedDashboard(
+        session.user
+      );
     }
   }
 );
 
 
 /* =========================================================
-   START
+   START DASHBOARD
 ========================================================= */
 
 document.addEventListener(
