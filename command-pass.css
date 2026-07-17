@@ -1,0 +1,1009 @@
+/* =========================================================
+   TILES LEGACY COMMAND PASS
+   Season 1: Dawn of Survival
+========================================================= */
+
+:root {
+  --bg: #08090c;
+  --panel: rgba(18, 20, 27, 0.94);
+  --panel-soft: rgba(26, 28, 37, 0.9);
+  --gold: #e8bd5b;
+  --gold-bright: #ffe08a;
+  --gold-dark: #8e6520;
+  --text: #f5f2ea;
+  --muted: #a9adb8;
+  --border: rgba(232, 189, 91, 0.25);
+  --danger: #ff6f7f;
+  --success: #61e6a3;
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(232, 189, 91, 0.1), transparent 28%),
+    radial-gradient(circle at 85% 10%, rgba(81, 104, 150, 0.1), transparent 25%),
+    linear-gradient(180deg, #0c0d11 0%, #08090c 45%, #050608 100%);
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.command-pass-page {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.season-hero {
+  position: relative;
+  min-height: 610px;
+  display: flex;
+  align-items: flex-end;
+  padding: 70px 24px 68px;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 5, 8, 0.12) 0%,
+      rgba(4, 5, 8, 0.5) 48%,
+      rgba(4, 5, 8, 0.97) 100%
+    ),
+    radial-gradient(circle at 70% 25%, rgba(255, 196, 82, 0.22), transparent 22%),
+    linear-gradient(135deg, #272318 0%, #12141a 42%, #08090c 100%);
+}
+
+.season-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.035) 35%,
+      transparent 52%
+    );
+  pointer-events: none;
+}
+
+.season-hero::after {
+  content: "";
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: -85px;
+  height: 220px;
+  background:
+    radial-gradient(ellipse at center, rgba(232, 189, 91, 0.12), transparent 68%);
+  filter: blur(15px);
+  pointer-events: none;
+}
+
+.season-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 48px,
+      rgba(255, 255, 255, 0.012) 49px,
+      rgba(255, 255, 255, 0.012) 50px
+    );
+  opacity: 0.5;
+}
+
+.season-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1120px);
+  margin: 0 auto;
+}
+
+.season-label,
+.section-label {
+  margin: 0 0 12px;
+  color: var(--gold);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.season-content h1 {
+  margin: 0;
+  font-size: clamp(3.5rem, 10vw, 7.5rem);
+  line-height: 0.9;
+  letter-spacing: -4px;
+  text-transform: uppercase;
+  color: #fffaf0;
+  text-shadow:
+    0 3px 0 rgba(0, 0, 0, 0.35),
+    0 0 45px rgba(232, 189, 91, 0.12);
+}
+
+.season-content h2 {
+  margin: 14px 0 0;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--gold-bright);
+}
+
+.season-description {
+  max-width: 650px;
+  margin: 20px 0 0;
+  color: #d5d2cb;
+  font-size: 1.04rem;
+  line-height: 1.75;
+}
+
+.season-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.primary-button,
+.secondary-button {
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.primary-button {
+  border: 1px solid rgba(255, 228, 155, 0.75);
+  color: #171006;
+  background: linear-gradient(180deg, #ffe599 0%, #d19a34 100%);
+  box-shadow:
+    0 10px 30px rgba(188, 126, 24, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.secondary-button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f4f1e8;
+  background: rgba(17, 19, 25, 0.78);
+}
+
+.primary-button:hover,
+.secondary-button:hover {
+  transform: translateY(-2px);
+}
+
+.primary-button:hover {
+  box-shadow:
+    0 14px 35px rgba(188, 126, 24, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+/* =========================================================
+   PLAYER PROGRESS
+========================================================= */
+
+.player-progress,
+.rewards-section,
+.elite-benefits {
+  width: min(calc(100% - 32px), 1180px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.player-progress {
+  position: relative;
+  z-index: 5;
+  margin-top: -34px;
+  padding: 26px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top right, rgba(232, 189, 91, 0.08), transparent 30%),
+    linear-gradient(180deg, rgba(28, 29, 38, 0.98), rgba(13, 15, 20, 0.98));
+  box-shadow: var(--shadow);
+}
+
+.progress-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.progress-heading h2 {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+}
+
+.session-status {
+  flex: 0 0 auto;
+  padding: 9px 13px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.7px;
+}
+
+.session-status.logged-out {
+  color: #ff9da7;
+  border: 1px solid rgba(255, 111, 127, 0.35);
+  background: rgba(255, 111, 127, 0.09);
+}
+
+.session-status.logged-in {
+  color: var(--success);
+  border: 1px solid rgba(97, 230, 163, 0.35);
+  background: rgba(97, 230, 163, 0.09);
+}
+
+.logged-out-message {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--gold);
+  border-radius: 10px;
+  color: #c9cbd2;
+  line-height: 1.65;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.player-progress-details {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.progress-stat {
+  min-height: 104px;
+  padding: 18px;
+  border-radius: 15px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.progress-stat span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.progress-stat strong {
+  color: var(--gold-bright);
+  font-size: 1.35rem;
+}
+
+.player-progress-bar-wrap {
+  height: 14px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #050608;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.8);
+}
+
+.player-progress-bar {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(90deg, #9d6c20, #e8bd5b 55%, #ffe69d);
+  box-shadow: 0 0 18px rgba(232, 189, 91, 0.45);
+  transition: width 0.45s ease;
+}
+
+/* =========================================================
+   REWARDS
+========================================================= */
+
+.rewards-section {
+  padding: 80px 0 30px;
+}
+
+.rewards-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.rewards-header h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.rewards-header > p {
+  max-width: 370px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  text-align: right;
+}
+
+.track-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.free-legend,
+.elite-legend {
+  padding: 12px 16px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+.free-legend {
+  color: #dce1e7;
+  border: 1px solid rgba(180, 190, 200, 0.22);
+  background: linear-gradient(180deg, rgba(76, 83, 94, 0.28), rgba(23, 26, 31, 0.85));
+}
+
+.elite-legend {
+  color: var(--gold-bright);
+  border: 1px solid rgba(232, 189, 91, 0.34);
+  background: linear-gradient(180deg, rgba(133, 91, 18, 0.35), rgba(28, 20, 8, 0.9));
+}
+
+.pass-loading {
+  padding: 42px 15px;
+  text-align: center;
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.empty-state {
+  margin-top: 25px;
+  padding: 35px 20px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* =========================================================
+   SURVIVAL ROAD
+========================================================= */
+
+.pass-wrapper {
+  position: relative;
+  margin-top: 24px;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 75px 14px 78px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at center, rgba(232, 189, 91, 0.055), transparent 48%),
+    linear-gradient(180deg, rgba(15, 17, 22, 0.96), rgba(8, 9, 12, 0.98));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pass-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.pass-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.035);
+  border-radius: 999px;
+}
+
+.pass-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #825c1d, #e8bd5b);
+  border-radius: 999px;
+}
+
+.pass-road {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  top: 50%;
+  height: 12px;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #2b2d32 0,
+      #2b2d32 40px,
+      #b6934a 40px,
+      #b6934a 46px
+    );
+  box-shadow:
+    0 0 0 3px rgba(0, 0, 0, 0.7),
+    0 7px 20px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.command-pass-rewards {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 22px;
+  width: max-content;
+  min-width: 100%;
+  padding: 12px;
+  scroll-snap-type: x mandatory;
+}
+
+/* =========================================================
+   REWARD CARDS
+========================================================= */
+
+.pass-card {
+  position: relative;
+  flex: 0 0 162px;
+  min-height: 250px;
+  padding: 16px 13px;
+  overflow: hidden;
+  border-radius: 18px;
+  text-align: center;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.075), transparent 34%),
+    linear-gradient(180deg, #24272d, #111318);
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  scroll-snap-align: center;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.pass-card:nth-child(odd) {
+  transform: translateY(-28px);
+}
+
+.pass-card:nth-child(even) {
+  transform: translateY(28px);
+}
+
+.pass-card:hover {
+  border-color: rgba(232, 189, 91, 0.65);
+  box-shadow:
+    0 18px 38px rgba(0, 0, 0, 0.58),
+    0 0 24px rgba(232, 189, 91, 0.12);
+}
+
+.pass-card:active {
+  transform: scale(0.96);
+}
+
+.pass-card[data-track="elite"] {
+  background:
+    radial-gradient(circle at top, rgba(255, 209, 92, 0.14), transparent 34%),
+    linear-gradient(180deg, #33270f, #151006);
+}
+
+.pass-card[data-track="elite"]::before {
+  content: "♛";
+  position: absolute;
+  top: 10px;
+  left: 11px;
+  color: var(--gold);
+  font-size: 1rem;
+}
+
+.pass-level {
+  display: inline-flex;
+  min-width: 58px;
+  height: 28px;
+  padding: 0 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  color: #1a1308;
+  background: linear-gradient(180deg, #ffe59a, #c58d28);
+  font-size: 0.7rem;
+  font-weight: 950;
+  letter-spacing: 1px;
+  box-shadow:
+    0 4px 11px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.pass-track {
+  margin-top: 11px;
+  color: #abb1ba;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 1.7px;
+}
+
+.pass-card[data-track="elite"] .pass-track {
+  color: var(--gold-bright);
+}
+
+.pass-reward-art {
+  width: 92px;
+  height: 92px;
+  margin: 13px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.11), transparent 45%),
+    rgba(0, 0, 0, 0.26);
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.35),
+    0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+.pass-reward-art img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.pass-fallback-icon {
+  font-size: 2.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 7px 9px rgba(0, 0, 0, 0.48));
+}
+
+.pass-name {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fffdf7;
+  font-size: 0.87rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.pass-rarity {
+  margin-top: 7px;
+  color: var(--gold);
+  font-size: 0.61rem;
+  font-weight: 950;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.pass-type {
+  margin-top: 9px;
+  padding-top: 9px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #898f99;
+  font-size: 0.61rem;
+  font-weight: 750;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   RARITY COLORS
+========================================================= */
+
+.pass-card.common {
+  border-color: rgba(184, 192, 200, 0.32);
+}
+
+.pass-card.common .pass-rarity {
+  color: #bcc4cc;
+}
+
+.pass-card.rare {
+  border-color: rgba(75, 151, 255, 0.58);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.48),
+    0 0 16px rgba(75, 151, 255, 0.09);
+}
+
+.pass-card.rare .pass-rarity {
+  color: #68aaff;
+}
+
+.pass-card.epic {
+  border-color: rgba(180, 91, 255, 0.62);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.48),
+    0 0 18px rgba(180, 91, 255, 0.11);
+}
+
+.pass-card.epic .pass-rarity {
+  color: #c17aff;
+}
+
+.pass-card.legendary {
+  border-color: rgba(255, 185, 61, 0.72);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.48),
+    0 0 20px rgba(255, 185, 61, 0.15);
+}
+
+.pass-card.legendary .pass-rarity {
+  color: #ffc857;
+}
+
+.pass-card.mythic {
+  border-color: rgba(255, 78, 104, 0.8);
+  box-shadow:
+    0 14px 32px rgba(0, 0, 0, 0.5),
+    0 0 23px rgba(255, 78, 104, 0.18);
+}
+
+.pass-card.mythic .pass-rarity {
+  color: #ff7085;
+}
+
+.pass-card.mythic::after {
+  content: "MYTHIC";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  padding: 5px 8px;
+  border-radius: 0 17px 0 11px;
+  color: #fff;
+  background: linear-gradient(135deg, #c72844, #ff6f84);
+  font-size: 0.52rem;
+  font-weight: 950;
+  letter-spacing: 1px;
+}
+
+/* =========================================================
+   FUTURE CARD STATES
+========================================================= */
+
+.pass-card.locked {
+  opacity: 0.5;
+  filter: grayscale(0.55);
+}
+
+.pass-card.claimable {
+  animation: claimPulse 1.8s ease-in-out infinite;
+}
+
+.pass-card.claimed {
+  border-color: rgba(97, 230, 163, 0.55);
+}
+
+.pass-card.claimed::after {
+  content: "CLAIMED";
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #07120c;
+  background: var(--success);
+  font-size: 0.52rem;
+  font-weight: 950;
+  letter-spacing: 0.9px;
+}
+
+@keyframes claimPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 14px 30px rgba(0, 0, 0, 0.48),
+      0 0 0 rgba(232, 189, 91, 0);
+  }
+
+  50% {
+    box-shadow:
+      0 14px 30px rgba(0, 0, 0, 0.48),
+      0 0 30px rgba(232, 189, 91, 0.32);
+  }
+}
+
+/* =========================================================
+   ELITE BENEFITS
+========================================================= */
+
+.elite-benefits {
+  padding: 75px 0 95px;
+}
+
+.elite-benefits > h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 26px;
+}
+
+.benefit-grid article {
+  min-height: 220px;
+  padding: 24px;
+  border-radius: 18px;
+  border: 1px solid rgba(232, 189, 91, 0.18);
+  background:
+    radial-gradient(circle at top right, rgba(232, 189, 91, 0.08), transparent 35%),
+    linear-gradient(180deg, rgba(28, 28, 35, 0.95), rgba(12, 14, 18, 0.97));
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.3);
+}
+
+.benefit-grid article > span {
+  display: block;
+  margin-bottom: 17px;
+  font-size: 2rem;
+}
+
+.benefit-grid h3 {
+  margin: 0 0 10px;
+  color: var(--gold-bright);
+}
+
+.benefit-grid p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+/* =========================================================
+   REWARD MODAL
+========================================================= */
+
+.reward-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(3, 4, 6, 0.84);
+  backdrop-filter: blur(10px);
+}
+
+.reward-modal-card {
+  position: relative;
+  width: min(100%, 440px);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  text-align: center;
+  border-radius: 22px;
+  border: 1px solid rgba(232, 189, 91, 0.35);
+  background:
+    radial-gradient(circle at top, rgba(232, 189, 91, 0.1), transparent 32%),
+    linear-gradient(180deg, #20222a, #0d0f14);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.65),
+    0 0 40px rgba(232, 189, 91, 0.08);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 1.5rem;
+}
+
+.modal-reward-art {
+  width: 170px;
+  height: 170px;
+  margin: 12px auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.12), transparent 42%),
+    rgba(0, 0, 0, 0.26);
+}
+
+.modal-reward-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#modalRewardLevel {
+  margin: 0 0 8px;
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+#modalRewardName {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+#modalRewardRarity {
+  margin-top: 9px;
+  color: var(--gold-bright);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+#modalRewardDescription {
+  margin: 18px 0 0;
+  color: #d5d7dd;
+  line-height: 1.65;
+}
+
+#modalRewardFlavor {
+  margin: 15px 0 22px;
+  color: #9fa4ae;
+  font-size: 0.92rem;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+  .season-hero {
+    min-height: 560px;
+    padding-top: 55px;
+  }
+
+  .player-progress-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .benefit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rewards-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .rewards-header > p {
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .season-hero {
+    min-height: 520px;
+    padding: 52px 18px 60px;
+  }
+
+  .season-content h1 {
+    letter-spacing: -2px;
+  }
+
+  .season-description {
+    font-size: 0.95rem;
+  }
+
+  .season-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  .player-progress,
+  .rewards-section,
+  .elite-benefits {
+    width: min(calc(100% - 20px), 1180px);
+  }
+
+  .player-progress {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .progress-heading {
+    flex-direction: column;
+  }
+
+  .session-status {
+    align-self: flex-start;
+  }
+
+  .progress-stat {
+    min-height: 92px;
+    padding: 14px;
+  }
+
+  .progress-stat strong {
+    font-size: 1.15rem;
+  }
+
+  .track-legend {
+    gap: 8px;
+  }
+
+  .free-legend,
+  .elite-legend {
+    padding: 10px 7px;
+    font-size: 0.65rem;
+    letter-spacing: 1.2px;
+  
