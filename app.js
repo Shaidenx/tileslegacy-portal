@@ -800,3 +800,58 @@ db.auth.onAuthStateChange(
 bindNavigation();
 bindInventoryFilters();
 checkCurrentSession();
+async function loadCommandPass() {
+
+    const loading = document.getElementById("commandPassLoading");
+    const container = document.getElementById("commandPassRewards");
+    const empty = document.getElementById("commandPassEmpty");
+
+    if (!container) return;
+
+    loading.classList.remove("hidden");
+    empty.classList.add("hidden");
+    container.innerHTML = "";
+
+    const { data, error } = await supabase
+        .from("command_pass_rewards")
+        .select("*")
+        .eq("season_key", "season-1")
+        .order("reward_level");
+
+    loading.classList.add("hidden");
+
+    if (error) {
+        console.error(error);
+        empty.classList.remove("hidden");
+        return;
+    }
+
+    data.forEach(reward => {
+
+        const card = document.createElement("div");
+
+        card.className = `pass-card ${reward.rarity}`;
+
+        card.innerHTML = `
+            <div class="pass-level">
+                Lv ${reward.reward_level}
+            </div>
+
+            <div class="pass-track">
+                ${reward.reward_track.toUpperCase()}
+            </div>
+
+            <div class="pass-name">
+                ${reward.item_name}
+            </div>
+
+            <div class="pass-type">
+                ${reward.item_type}
+            </div>
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
