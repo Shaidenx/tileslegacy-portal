@@ -924,3 +924,76 @@ button:disabled {
     text-transform:capitalize;
 
 }
+/* COMMAND PASS REWARD ART */
+
+.pass-reward-art {
+  width: 92px;
+  height: 92px;
+  margin: 12px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top, rgba(255,255,255,.12), transparent 45%),
+    rgba(0,0,0,.28);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow:
+    inset 0 0 20px rgba(0,0,0,.35),
+    0 8px 18px rgba(0,0,0,.3);
+}
+
+.pass-reward-art img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.pass-fallback-icon {
+  font-size: 2.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,.45));
+}
+
+.pass-rarity {
+  margin-top: 8px;
+  font-size: .64rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #d4b35f;
+}
+
+.pass-card.common .pass-rarity {
+  color: #b8c0c8;
+}
+
+.pass-card.rare .pass-rarity {
+  color: #65a9ff;
+}
+
+.pass-card.epic .pass-rarity {
+  color: #c27aff;
+}
+
+.pass-card.legendary .pass-rarity {
+  color: #ffc857;
+}
+
+.pass-card.mythic .pass-rarity {
+  color: #ff6f86;
+}
+
+@media (max-width: 600px) {
+  .pass-reward-art {
+    width: 78px;
+    height: 78px;
+    margin: 10px auto;
+  }
+
+  .pass-fallback-icon {
+    font-size: 2.35rem;
+  }
+}
