@@ -444,10 +444,11 @@ async function loadDashboard(user) {
 
   try {
     await Promise.all([
-      loadProfile(user.id),
-      loadInventory(user.id),
-      loadCommandPass(user.id)
-    ]);
+    loadProfile(user.id),
+    loadInventory(user.id),
+    loadCommandPass(user.id),
+    loadCommandPassRewards()
+]);
 
     openPanel("profilePanel");
 
