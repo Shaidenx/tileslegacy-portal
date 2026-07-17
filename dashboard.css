@@ -1070,7 +1070,8 @@ button.quick-link-card {
 
 .quick-link-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(229, 184, 7
+  border-color: rgba(229, 184, 78, 0.55);
+}
 /* =========================================================
    EMERGENCY MOBILE LAYOUT FIX
 ========================================================= */
