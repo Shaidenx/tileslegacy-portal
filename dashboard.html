@@ -10,14 +10,554 @@
 
   <meta
     name="description"
-    content="Access your Tiles Legacy Commander Dashboard. Track Command Pass progress, missions, rewards, achievements, collections, and seasonal advancement."
+    content="Access the Tiles Legacy Commander Network. Sign in or create your Legacy ID to track missions, rewards, Command Pass progress, collections, and achievements."
   >
 
   <meta name="theme-color" content="#080b10">
 
-  <title>Commander Dashboard | Tiles Legacy</title>
+  <title>Commander Network | Tiles Legacy</title>
 
-  <link rel="stylesheet" href="dashboard.css?v=3">
+  <link rel="stylesheet" href="dashboard.css?v=4">
+
+  <style>
+    /* =====================================================
+       LOGGED-OUT COMMANDER LANDING
+    ====================================================== */
+
+    .commander-gateway {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 38px 22px 70px;
+      background:
+        radial-gradient(
+          circle at 15% 10%,
+          rgba(255, 207, 91, 0.12),
+          transparent 34%
+        ),
+        radial-gradient(
+          circle at 85% 76%,
+          rgba(69, 212, 161, 0.08),
+          transparent 34%
+        ),
+        linear-gradient(
+          180deg,
+          #0b1016 0%,
+          #06090d 55%,
+          #04070a 100%
+        );
+    }
+
+    .gateway-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.25;
+      background-image:
+        linear-gradient(
+          rgba(255, 255, 255, 0.025) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.025) 1px,
+          transparent 1px
+        );
+      background-size: 52px 52px;
+      mask-image:
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.95),
+          transparent
+        );
+    }
+
+    .gateway-scanline {
+      position: absolute;
+      top: -20%;
+      left: 0;
+      width: 100%;
+      height: 140px;
+      pointer-events: none;
+      opacity: 0.14;
+      background:
+        linear-gradient(
+          180deg,
+          transparent,
+          rgba(255, 213, 105, 0.28),
+          transparent
+        );
+      animation: gatewayScan 7s linear infinite;
+    }
+
+    .gateway-orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .gateway-orb-left {
+      width: 310px;
+      height: 310px;
+      top: -100px;
+      left: -130px;
+      background:
+        radial-gradient(
+          circle,
+          rgba(255, 202, 82, 0.16),
+          transparent 68%
+        );
+    }
+
+    .gateway-orb-right {
+      width: 360px;
+      height: 360px;
+      right: -180px;
+      bottom: 5%;
+      background:
+        radial-gradient(
+          circle,
+          rgba(59, 216, 160, 0.1),
+          transparent 68%
+        );
+    }
+
+    .gateway-shell {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 760px);
+    }
+
+    .gateway-card {
+      position: relative;
+      overflow: hidden;
+      padding: 42px 34px 34px;
+      border:
+        1px solid rgba(255, 211, 101, 0.34);
+      border-radius: 34px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(19, 29, 42, 0.97),
+          rgba(8, 13, 20, 0.98)
+        );
+      box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      text-align: center;
+    }
+
+    .gateway-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          120deg,
+          transparent 10%,
+          rgba(255, 216, 114, 0.05) 42%,
+          transparent 62%
+        );
+      transform: translateX(-100%);
+      animation: gatewayShine 8s ease-in-out infinite;
+    }
+
+    .gateway-network-status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 28px;
+      padding: 9px 15px;
+      border:
+        1px solid rgba(255, 211, 101, 0.2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.025);
+      color: #b9c1cc;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    .gateway-status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #f0b94b;
+      box-shadow:
+        0 0 0 6px rgba(240, 185, 75, 0.09),
+        0 0 18px rgba(240, 185, 75, 0.5);
+      animation: gatewayPulse 2.2s ease-in-out infinite;
+    }
+
+    .gateway-emblem-wrap {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gateway-emblem-ring {
+      position: absolute;
+      inset: 0;
+      border:
+        1px solid rgba(255, 211, 101, 0.7);
+      border-radius: 50%;
+      box-shadow:
+        0 0 30px rgba(255, 207, 91, 0.13);
+      animation: gatewayRotate 15s linear infinite;
+    }
+
+    .gateway-emblem-ring::before,
+    .gateway-emblem-ring::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffd569;
+      box-shadow:
+        0 0 18px rgba(255, 213, 105, 0.8);
+    }
+
+    .gateway-emblem-ring::before {
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .gateway-emblem-ring::after {
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .gateway-emblem-core {
+      width: 116px;
+      height: 116px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border:
+        1px solid rgba(255, 211, 101, 0.3);
+      border-radius: 50%;
+      background:
+        radial-gradient(
+          circle at 35% 25%,
+          #223349,
+          #101925 70%
+        );
+      box-shadow:
+        inset 0 0 30px rgba(255, 255, 255, 0.025),
+        0 18px 45px rgba(0, 0, 0, 0.4);
+    }
+
+    .gateway-emblem-core span {
+      color: #ffd569;
+      font-size: 56px;
+      font-weight: 950;
+      line-height: 1;
+      text-shadow:
+        0 0 22px rgba(255, 213, 105, 0.28);
+    }
+
+    .gateway-eyebrow {
+      margin: 0 0 14px;
+      color: #ffd569;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .gateway-card h1 {
+      margin: 0;
+      color: #f7f8fa;
+      font-size: clamp(38px, 8vw, 68px);
+      font-weight: 950;
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+      text-transform: uppercase;
+    }
+
+    .gateway-card h1 span {
+      display: block;
+      margin-top: 9px;
+      color: #ffd569;
+    }
+
+    .gateway-description {
+      max-width: 590px;
+      margin: 25px auto 0;
+      color: #b5bdc8;
+      font-size: clamp(16px, 4vw, 20px);
+      line-height: 1.65;
+    }
+
+    .gateway-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 31px;
+    }
+
+    .gateway-primary,
+    .gateway-secondary {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      padding: 15px 22px;
+      border-radius: 18px;
+      font-size: 17px;
+      font-weight: 900;
+      text-decoration: none;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+    }
+
+    .gateway-primary {
+      color: #15130d;
+      background:
+        linear-gradient(
+          135deg,
+          #ffda71,
+          #efbb3f
+        );
+      box-shadow:
+        0 14px 34px rgba(240, 187, 63, 0.18);
+    }
+
+    .gateway-secondary {
+      color: #f1f4f7;
+      border:
+        1px solid rgba(255, 211, 101, 0.3);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .gateway-primary:hover,
+    .gateway-secondary:hover {
+      transform: translateY(-2px);
+    }
+
+    .gateway-primary:hover {
+      box-shadow:
+        0 18px 42px rgba(240, 187, 63, 0.26);
+    }
+
+    .gateway-secondary:hover {
+      border-color:
+        rgba(255, 211, 101, 0.6);
+    }
+
+    .gateway-access-note {
+      margin: 18px 0 0;
+      color: #788391;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .gateway-divider {
+      width: 100%;
+      height: 1px;
+      margin: 33px 0 28px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 211, 101, 0.28),
+          transparent
+        );
+    }
+
+    .gateway-features-heading {
+      margin-bottom: 20px;
+    }
+
+    .gateway-features-heading span {
+      color: #7be0b5;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .gateway-features-heading h2 {
+      margin: 8px 0 0;
+      color: #f3f5f7;
+      font-size: 25px;
+      line-height: 1.2;
+    }
+
+    .gateway-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      text-align: left;
+    }
+
+    .gateway-feature {
+      min-height: 116px;
+      padding: 18px;
+      border:
+        1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 18px;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 255, 255, 0.035),
+          rgba(255, 255, 255, 0.012)
+        );
+    }
+
+    .gateway-feature-icon {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 23px;
+    }
+
+    .gateway-feature strong {
+      display: block;
+      color: #f4f6f8;
+      font-size: 15px;
+    }
+
+    .gateway-feature small {
+      display: block;
+      margin-top: 5px;
+      color: #86909c;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .gateway-security {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 25px;
+      color: #707b88;
+      font-size: 12px;
+    }
+
+    .gateway-security span:first-child {
+      color: #7be0b5;
+    }
+
+    @keyframes gatewayPulse {
+      0%,
+      100% {
+        opacity: 0.65;
+        transform: scale(0.9);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.08);
+      }
+    }
+
+    @keyframes gatewayRotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes gatewayScan {
+      from {
+        transform: translateY(-30vh);
+      }
+
+      to {
+        transform: translateY(130vh);
+      }
+    }
+
+    @keyframes gatewayShine {
+      0%,
+      70% {
+        transform: translateX(-100%);
+      }
+
+      88%,
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @media (min-width: 620px) {
+      .gateway-actions {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
+
+      .gateway-feature-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .gateway-feature {
+        min-height: 142px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .commander-gateway {
+        padding:
+          25px 18px
+          calc(44px + env(safe-area-inset-bottom));
+      }
+
+      .gateway-card {
+        padding: 32px 20px 25px;
+        border-radius: 28px;
+      }
+
+      .gateway-emblem-wrap {
+        width: 128px;
+        height: 128px;
+      }
+
+      .gateway-emblem-core {
+        width: 98px;
+        height: 98px;
+      }
+
+      .gateway-emblem-core span {
+        font-size: 48px;
+      }
+
+      .gateway-card h1 {
+        font-size: 42px;
+      }
+
+      .gateway-feature {
+        padding: 15px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gateway-emblem-ring,
+      .gateway-status-dot,
+      .gateway-scanline,
+      .gateway-card::before {
+        animation: none;
+      }
+    }
+  </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="dashboard.js?v=5" defer></script>
@@ -60,38 +600,201 @@
 
         </div>
 
+      </div>
 
-        <!-- =================================================
-             LOGIN REQUIRED
-        ================================================== -->
+    </section>
 
-        <div
-          class="login-required hidden"
-          id="loginRequired"
-        >
 
-          <div class="login-icon" aria-hidden="true">
-            🔒
+    <!-- =====================================================
+         LOGGED-OUT COMMANDER GATEWAY
+    ====================================================== -->
+
+    <section
+      class="commander-gateway hidden"
+      id="loginRequired"
+    >
+
+      <div
+        class="gateway-grid"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="gateway-scanline"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="gateway-orb gateway-orb-left"
+        aria-hidden="true"
+      ></div>
+
+      <div
+        class="gateway-orb gateway-orb-right"
+        aria-hidden="true"
+      ></div>
+
+      <div class="gateway-shell">
+
+        <div class="gateway-card">
+
+          <div class="gateway-network-status">
+
+            <span class="gateway-status-dot"></span>
+
+            <span>
+              Secure Commander Access Required
+            </span>
+
           </div>
 
-          <p class="section-label">
-            Restricted Network
-          </p>
-
-          <h1>Commander Login Required</h1>
-
-          <p>
-            Sign in through the Commander Portal to access your
-            profile, missions, rewards, Command Pass progression,
-            collection, and achievement records.
-          </p>
-
-          <a
-            class="primary-button"
-            href="index.html"
+          <div
+            class="gateway-emblem-wrap"
+            aria-hidden="true"
           >
-            Open Commander Portal
-          </a>
+
+            <div class="gateway-emblem-ring"></div>
+
+            <div class="gateway-emblem-core">
+              <span>L</span>
+            </div>
+
+          </div>
+
+          <p class="gateway-eyebrow">
+            Tiles Legacy Commander Network
+          </p>
+
+          <h1>
+            Enter the
+            <span>Command Center</span>
+          </h1>
+
+          <p class="gateway-description">
+            Sign in with your Legacy ID to access your personal
+            Commander profile, seasonal progression, missions,
+            rewards, collection, and permanent achievements.
+          </p>
+
+          <div class="gateway-actions">
+
+            <a
+              class="gateway-primary"
+              href="index.html"
+            >
+              <span>Open Commander Portal</span>
+              <span aria-hidden="true">›</span>
+            </a>
+
+            <a
+              class="gateway-secondary"
+              href="index.html#signup"
+            >
+              <span>Create Legacy ID</span>
+              <span aria-hidden="true">＋</span>
+            </a>
+
+          </div>
+
+          <p class="gateway-access-note">
+            One account connects your entire Tiles Legacy experience.
+          </p>
+
+          <div
+            class="gateway-divider"
+            aria-hidden="true"
+          ></div>
+
+          <div class="gateway-features-heading">
+
+            <span>Commander Access</span>
+
+            <h2>
+              Your Legacy begins after login
+            </h2>
+
+          </div>
+
+          <div class="gateway-feature-grid">
+
+            <article class="gateway-feature">
+
+              <span class="gateway-feature-icon">
+                ⭐
+              </span>
+
+              <strong>
+                Command Pass
+              </strong>
+
+              <small>
+                Advance through seasonal levels and exclusive rewards.
+              </small>
+
+            </article>
+
+
+            <article class="gateway-feature">
+
+              <span class="gateway-feature-icon">
+                ⚔️
+              </span>
+
+              <strong>
+                Daily Missions
+              </strong>
+
+              <small>
+                Complete active operations and earn progression XP.
+              </small>
+
+            </article>
+
+
+            <article class="gateway-feature">
+
+              <span class="gateway-feature-icon">
+                🎒
+              </span>
+
+              <strong>
+                Collection
+              </strong>
+
+              <small>
+                Keep permanent avatars, frames, badges, and titles.
+              </small>
+
+            </article>
+
+
+            <article class="gateway-feature">
+
+              <span class="gateway-feature-icon">
+                🏆
+              </span>
+
+              <strong>
+                Achievements
+              </strong>
+
+              <small>
+                Record milestones and build your permanent Legacy.
+              </small>
+
+            </article>
+
+          </div>
+
+          <div class="gateway-security">
+
+            <span aria-hidden="true">●</span>
+
+            <span>
+              Protected by the Legacy Command Network
+            </span>
+
+          </div>
 
         </div>
 
@@ -100,9 +803,8 @@
     </section>
 
 
-    <!-- =====================================================
+                <!-- =====================================================
          AUTHENTICATED DASHBOARD
-         EVERYTHING INSIDE THIS AREA REQUIRES LOGIN
     ====================================================== -->
 
     <div
@@ -110,16 +812,11 @@
       id="dashboardInterface"
     >
 
-      <!-- ===================================================
-           HERO / COMMANDER IDENTITY
-      ==================================================== -->
+      <!-- HERO -->
 
       <section class="dashboard-hero">
 
-        <div
-          class="hero-grid"
-          aria-hidden="true"
-        ></div>
+        <div class="hero-grid" aria-hidden="true"></div>
 
         <div
           class="hero-glow hero-glow-left"
@@ -183,8 +880,6 @@
 
           </div>
 
-
-          <!-- COMMANDER CARD -->
 
           <aside
             class="commander-identity-card"
@@ -270,17 +965,11 @@
       </section>
 
 
-      <!-- ===================================================
-           DASHBOARD CONTENT
-      ==================================================== -->
+      <!-- DASHBOARD CONTENT -->
 
       <section class="dashboard-content">
 
         <div class="dashboard-shell">
-
-          <!-- =================================================
-               COMMANDER OVERVIEW
-          ================================================== -->
 
           <header class="dashboard-section-header">
 
@@ -309,10 +998,6 @@
           </header>
 
 
-          <!-- =================================================
-               SUMMARY CARDS
-          ================================================== -->
-
           <section
             class="summary-grid"
             aria-label="Commander statistics"
@@ -322,9 +1007,7 @@
 
               <div class="summary-card-top">
 
-                <div class="summary-icon">
-                  ⭐
-                </div>
+                <div class="summary-icon">⭐</div>
 
                 <span class="summary-tag">
                   Active
@@ -355,9 +1038,7 @@
 
               <div class="summary-card-top">
 
-                <div class="summary-icon">
-                  🎒
-                </div>
+                <div class="summary-icon">🎒</div>
 
                 <span class="summary-tag">
                   Permanent
@@ -388,9 +1069,7 @@
 
               <div class="summary-card-top">
 
-                <div class="summary-icon">
-                  🏆
-                </div>
+                <div class="summary-icon">🏆</div>
 
                 <span class="summary-tag">
                   Legacy
@@ -421,9 +1100,7 @@
 
               <div class="summary-card-top">
 
-                <div class="summary-icon">
-                  👑
-                </div>
+                <div class="summary-icon">👑</div>
 
                 <span class="summary-tag">
                   Mastery
@@ -452,13 +1129,7 @@
           </section>
 
 
-          <!-- =================================================
-               PRIMARY DASHBOARD GRID
-          ================================================== -->
-
           <div class="primary-dashboard-grid">
-
-            <!-- COMMAND PASS -->
 
             <section class="dashboard-panel pass-panel">
 
@@ -500,9 +1171,7 @@
 
                 <div class="pass-level-emblem">
 
-                  <span>
-                    Level
-                  </span>
+                  <span>Level</span>
 
                   <strong id="passLevelNumber">
                     1
@@ -571,8 +1240,6 @@
             </section>
 
 
-            <!-- SEASON STATUS -->
-
             <aside class="dashboard-panel season-status-panel">
 
               <div class="panel-heading compact-heading">
@@ -599,13 +1266,9 @@
 
                 <div class="season-number">
 
-                  <span>
-                    Season
-                  </span>
+                  <span>Season</span>
 
-                  <strong>
-                    01
-                  </strong>
+                  <strong>01</strong>
 
                 </div>
 
@@ -667,10 +1330,6 @@
 
           </div>
 
-
-          <!-- =================================================
-               DAILY MISSIONS
-          ================================================== -->
 
           <section class="dashboard-panel missions-panel">
 
@@ -734,13 +1393,7 @@
           </section>
 
 
-          <!-- =================================================
-               COLLECTION AND ACHIEVEMENTS
-          ================================================== -->
-
           <div class="lower-dashboard-grid">
-
-            <!-- COLLECTION -->
 
             <section class="dashboard-panel collection-panel">
 
@@ -783,25 +1436,10 @@
 
               <div class="collection-types">
 
-                <span>
-                  <i>◈</i>
-                  Avatars
-                </span>
-
-                <span>
-                  <i>◈</i>
-                  Frames
-                </span>
-
-                <span>
-                  <i>◈</i>
-                  Badges
-                </span>
-
-                <span>
-                  <i>◈</i>
-                  Titles
-                </span>
+                <span><i>◈</i> Avatars</span>
+                <span><i>◈</i> Frames</span>
+                <span><i>◈</i> Badges</span>
+                <span><i>◈</i> Titles</span>
 
               </div>
 
@@ -810,19 +1448,12 @@
                 id="viewCollectionButton"
                 type="button"
               >
-                <span>
-                  View Collection
-                </span>
-
-                <span aria-hidden="true">
-                  ›
-                </span>
+                <span>View Collection</span>
+                <span aria-hidden="true">›</span>
               </button>
 
             </section>
 
-
-            <!-- ACHIEVEMENTS -->
 
             <section class="dashboard-panel achievement-panel">
 
@@ -880,23 +1511,14 @@
                 id="viewAchievementsButton"
                 type="button"
               >
-                <span>
-                  View Achievements
-                </span>
-
-                <span aria-hidden="true">
-                  ›
-                </span>
+                <span>View Achievements</span>
+                <span aria-hidden="true">›</span>
               </button>
 
             </section>
 
           </div>
 
-
-          <!-- =================================================
-               RECENT REWARD
-          ================================================== -->
 
           <section class="dashboard-panel recent-reward-panel">
 
@@ -961,10 +1583,6 @@
 
           </section>
 
-
-          <!-- =================================================
-               QUICK NAVIGATION
-          ================================================== -->
 
           <section class="quick-links-section">
 
@@ -1128,9 +1746,7 @@
   </main>
 
 
-  <!-- =====================================================
-       DASHBOARD MODAL
-  ====================================================== -->
+  <!-- DASHBOARD MODAL -->
 
   <div
     class="dashboard-modal hidden"
