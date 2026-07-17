@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Command Pass | Tiles Legacy</title>
+
+  <link rel="stylesheet" href="command-pass.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <main class="command-pass-page">
+
+    <section class="season-hero">
+
+      <div class="season-overlay"></div>
+
+      <div class="season-content">
+
+        <p class="season-label">
+          TILE LEGACY COMMAND PASS
+        </p>
+
+        <h1>
+          Season 1
+        </h1>
+
+        <h2>
+          Dawn of Survival
+        </h2>
+
+        <p class="season-description">
+          Rebuild from the ruins, strengthen your commander,
+          and unlock exclusive rewards across 50 levels.
+        </p>
+
+        <div class="season-actions">
+
+          <a
+            href="index.html"
+            id="loginLink"
+            class="primary-button"
+          >
+            Commander Login
+          </a>
+
+          <button
+            id="jumpToRewards"
+            class="secondary-button"
+            type="button"
+          >
+            View Rewards
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="player-progress">
+
+      <div class="progress-heading">
+
+        <div>
+          <p class="section-label">
+            COMMANDER PROGRESS
+          </p>
+
+          <h2 id="progressTitle">
+            Public Season Preview
+          </h2>
+        </div>
+
+        <div
+          id="sessionStatus"
+          class="session-status logged-out"
+        >
+          Not logged in
+        </div>
+
+      </div>
+
+      <div
+        id="loggedOutMessage"
+        class="logged-out-message"
+      >
+        Anyone can browse the complete Command Pass.
+        Log in through the Commander Portal to track progress
+        and claim unlocked rewards.
+      </div>
+
+      <div
+        id="playerProgressDetails"
+        class="player-progress-details hidden"
+      >
+
+        <div class="progress-stat">
+          <span>Pass Type</span>
+          <strong id="passType">Free Pass</strong>
+        </div>
+
+        <div class="progress-stat">
+          <span>Level</span>
+          <strong id="passLevel">1</strong>
+        </div>
+
+        <div class="progress-stat">
+          <span>Pass XP</span>
+          <strong id="passXp">0</strong>
+        </div>
+
+        <div class="progress-stat">
+          <span>Prestige</span>
+          <strong id="prestigeLevel">0</strong>
+        </div>
+
+      </div>
+
+      <div
+        id="playerProgressBarWrap"
+        class="player-progress-bar-wrap hidden"
+      >
+        <div
+          id="playerProgressBar"
+          class="player-progress-bar"
+        ></div>
+      </div>
+
+    </section>
+
+    <section
+      id="rewardsSection"
+      class="rewards-section"
+    >
+
+      <div class="rewards-header">
+
+        <div>
+          <p class="section-label">
+            SURVIVAL ROAD
+          </p>
+
+          <h2>
+            50 Levels of Rewards
+          </h2>
+        </div>
+
+        <p>
+          Swipe horizontally to explore the Free and Elite tracks.
+        </p>
+
+      </div>
+
+      <div class="track-legend">
+
+        <div class="free-legend">
+          Free Track
+        </div>
+
+        <div class="elite-legend">
+          Elite Track
+        </div>
+
+      </div>
+
+      <div
+        id="commandPassLoading"
+        class="pass-loading"
+      >
+        Loading Season 1 rewards...
+      </div>
+
+      <div
+        id="commandPassEmpty"
+        class="empty-state hidden"
+      >
+        <h3>No rewards found</h3>
+
+        <p>
+          The Season 1 reward catalog could not be loaded.
+        </p>
+      </div>
+
+      <div class="pass-wrapper">
+
+        <div class="pass-road"></div>
+
+        <div
+          id="commandPassRewards"
+          class="command-pass-rewards"
+        ></div>
+
+      </div>
+
+    </section>
+
+    <section class="elite-benefits">
+
+      <p class="section-label">
+        ELITE COMMAND
+      </p>
+
+      <h2>
+        Elite Pass Benefits
+      </h2>
+
+      <div class="benefit-grid">
+
+        <article>
+          <span>👑</span>
+          <h3>Exclusive Rewards</h3>
+          <p>
+            Unlock Elite avatars, frames, badges, themes,
+            titles, and backgrounds.
+          </p>
+        </article>
+
+        <article>
+          <span>⚡</span>
+          <h3>Bonus Progression</h3>
+          <p>
+            Gain access to additional boosts, caches,
+            and progression rewards.
+          </p>
+        </article>
+
+        <article>
+          <span>💎</span>
+          <h3>Mythic Milestones</h3>
+          <p>
+            Reach the final levels to unlock rare and mythic
+            Season 1 collectibles.
+          </p>
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <div
+    id="rewardModal"
+    class="reward-modal hidden"
+  >
+    <div class="reward-modal-card">
+
+      <button
+        id="closeRewardModal"
+        class="modal-close"
+        type="button"
+        aria-label="Close reward preview"
+      >
+        ×
+      </button>
+
+      <div
+        id="modalRewardArt"
+        class="modal-reward-art"
+      ></div>
+
+      <p id="modalRewardLevel"></p>
+
+      <h2 id="modalRewardName"></h2>
+
+      <div id="modalRewardRarity"></div>
+
+      <p id="modalRewardDescription"></p>
+
+      <p id="modalRewardFlavor"></p>
+
+      <button
+        id="modalRewardAction"
+        class="primary-button"
+        type="button"
+        disabled
+      >
+        Log in to claim
+      </button>
+
+    </div>
+  </div>
+
+  <script src="command-pass.js"></script>
+
+</body>
+</html>
