@@ -829,3 +829,98 @@ button:disabled {
     font-size: 22px;
   }
 }
+.pass-wrapper{
+    position:relative;
+    overflow-x:auto;
+    padding:80px 20px;
+    margin-top:20px;
+}
+
+.pass-road{
+    position:absolute;
+    left:0;
+    right:0;
+    top:50%;
+    height:8px;
+    border-radius:20px;
+    background:linear-gradient(90deg,#444,#777,#444);
+    transform:translateY(-50%);
+    z-index:0;
+}
+
+.command-pass-rewards{
+    display:flex;
+    gap:40px;
+    position:relative;
+    z-index:2;
+    min-width:max-content;
+    padding:10px;
+}
+
+.pass-card{
+
+    width:170px;
+
+    min-height:190px;
+
+    background:#171717;
+
+    border:2px solid #444;
+
+    border-radius:18px;
+
+    text-align:center;
+
+    color:white;
+
+    padding:18px;
+
+    transition:.25s;
+
+    cursor:pointer;
+
+    box-shadow:0 0 15px rgba(0,0,0,.35);
+
+}
+
+.pass-card:hover{
+
+    transform:translateY(-8px) scale(1.05);
+
+}
+
+.pass-level{
+
+    font-size:13px;
+
+    color:#bbb;
+
+}
+
+.pass-track{
+
+    margin:12px 0;
+
+    font-weight:bold;
+
+    color:#ffd54a;
+
+}
+
+.pass-name{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.pass-type{
+
+    margin-top:15px;
+
+    color:#aaa;
+
+    text-transform:capitalize;
+
+}
