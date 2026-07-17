@@ -813,7 +813,7 @@ async function loadCommandPassRewards() {
     empty.classList.add("hidden");
     container.innerHTML = "";
 
-    const { data, error } = await supabase
+    const { data, error } = await db
         .from("command_pass_rewards")
         .select("*")
         .eq("season_key", "season-1")
