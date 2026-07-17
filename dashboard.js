@@ -892,5 +892,327 @@ function renderDailyMissions() {
     );
 
     const xpReward = Number(
-      getFirstValue(
-      
+      getFirstValue(mission,
+[
+  "xp_reward",
+  "reward_xp",
+  "xp",
+  "points"
+],
+0
+)
+);
+
+const completed = isMissionCompleted(mission);
+
+if (!completed && Number.isFinite(xpReward)) {
+  availableXp += xpReward;
+}
+
+const missionElement = document.createElement("article");
+
+missionElement.className =
+  `mission-item${completed ? " completed" : ""}`;
+
+missionElement.innerHTML = `
+<div class="mission-status-icon">
+${completed ? "✓" : getMissionIcon(missionKey)}
+</div>
+
+<div class="mission-copy">
+<h3>${escapeHtml(title)}</h3>
+<p>${escapeHtml(description)}</p>
+</div>
+
+<div class="mission-xp">
+${
+completed
+? "Complete"
+: `+${Number.isFinite(xpReward) ? xpReward : 0} XP`
+}
+</div>
+`;
+
+elements.missionsList.appendChild(
+missionElement
+);
+
+});
+
+elements.dailyXpAvailable.textContent =
+`${availableXp} XP`;
+
+}/* =========================================================
+   RENDER RECENT REWARD
+========================================================= */
+
+function getInventoryTimestamp(item) {
+  const value = getFirstValue(
+    item,
+    [
+      "created_at",
+      "unlocked_at",
+      "claimed_at",
+      "acquired_at",
+      "updated_at"
+    ],
+    ""
+  );
+
+  const timestamp = new Date(value).getTime();
+
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function renderRecentReward() {
+  if (dashboardState.inventory.length === 0) {
+    elements.recentRewardArt.textContent = "🎁";
+
+    elements.recentRewardType.textContent =
+      "No reward collected";
+
+    elements.recentRewardName.textContent =
+      "Your first reward is waiting";
+
+    elements.recentRewardSource.textContent =
+      "Progress through the Command Pass to begin building your collection.";
+
+    return;
+  }
+
+  const sortedInventory = [
+    ...dashboardState.inventory
+  ].sort(
+    (a, b) =>
+      getInventoryTimestamp(b) -
+      getInventoryTimestamp(a)
+  );
+
+  const item = sortedInventory[0];
+
+  const itemName = safeText(
+    getFirstValue(item, [
+      "item_name",
+      "reward_name",
+      "name",
+      "title"
+    ]),
+    "Legacy Reward"
+  );
+
+  const itemType = formatItemType(
+    getFirstValue(item, [
+      "item_type",
+      "reward_type",
+      "type",
+      "category"
+    ])
+  );
+
+  const imageUrl = safeText(
+    getFirstValue(item, [
+      "image_url",
+      "icon_url",
+      "preview_url",
+      "avatar_url"
+    ]),
+    ""
+  );
+
+  const source = safeText(
+    getFirstValue(item, [
+      "source",
+      "reward_source",
+      "collection_name"
+    ]),
+    "Tiles Legacy Collection"
+  );
+
+  elements.recentRewardType.textContent = itemType;
+  elements.recentRewardName.textContent = itemName;
+  elements.recentRewardSource.textContent =
+    `Acquired from ${source}.`;
+
+  if (imageUrl) {
+    elements.recentRewardArt.innerHTML = "";
+
+    const image = document.createElement("img");
+
+    image.src = imageUrl;
+    image.alt = itemName;
+
+    image.addEventListener("error", () => {
+      elements.recentRewardArt.textContent = "🎁";
+    });
+
+    elements.recentRewardArt.appendChild(image);
+  } else {
+    elements.recentRewardArt.textContent = "🎁";
+  }
+}
+
+/* =========================================================
+   DASHBOARD BUTTONS
+========================================================= */
+
+elements.logoutButton?.addEventListener(
+  "click",
+  async () => {
+    const result = await db.auth.signOut();
+
+    if (result.error) {
+      openModal({
+        icon: "⚠️",
+        title: "Logout Failed",
+        message:
+          "Tiles Legacy could not log you out. Please try again."
+      });
+
+      return;
+    }
+
+    window.location.href = "index.html";
+  }
+);
+
+function openCollectionMessage() {
+  openModal({
+    icon: "🎒",
+    title: "Collection Chamber",
+    message:
+      "Your collection data is connected. The full visual Collection page is the next Commander Portal feature we will activate."
+  });
+}
+
+function openAchievementsMessage() {
+  openModal({
+    icon: "🏆",
+    title: "Legacy Achievements",
+    message:
+      "Your achievement totals are connected. The complete Achievement gallery and challenge list will be activated soon."
+  });
+}
+
+elements.viewCollectionButton?.addEventListener(
+  "click",
+  openCollectionMessage
+);
+
+elements.quickCollectionButton?.addEventListener(
+  "click",
+  openCollectionMessage
+);
+
+elements.viewAchievementsButton?.addEventListener(
+  "click",
+  openAchievementsMessage
+);
+
+elements.quickAchievementsButton?.addEventListener(
+  "click",
+  openAchievementsMessage
+);/* =========================================================
+   AUTH STATE
+========================================================= */
+
+async function handleSignedOutState() {
+  hideElement(elements.loading);
+  hideElement(elements.interface);
+  showElement(elements.loginRequired);
+
+  elements.logoutButton?.classList.add("hidden");
+}
+
+async function handleSignedInState(user) {
+  dashboardState.user = user;
+
+  hideElement(elements.loginRequired);
+  showElement(elements.logoutButton);
+  showElement(elements.loading);
+  hideElement(elements.interface);
+
+  try {
+    await loadProfiles(user.id);
+    await loadCommandPass(user.id);
+    await loadInventory(user.id);
+    await loadPlayerAchievements(user.id);
+    await loadDailyMissions(user.id);
+
+    renderCommanderIdentity();
+    renderCollection();
+    renderAchievements();
+    renderDailyMissions();
+    renderRecentReward();
+
+    await renderCommandPass();
+
+    hideElement(elements.loading);
+    showElement(elements.interface);
+  } catch (error) {
+    console.error(
+      "Dashboard initialization failed:",
+      error
+    );
+
+    hideElement(elements.loading);
+    showElement(elements.interface);
+
+    openModal({
+      icon: "⚠️",
+      title: "Command Network Error",
+      message:
+        error?.message ||
+        "Some dashboard information could not be loaded."
+    });
+  }
+}
+
+/* =========================================================
+   START DASHBOARD
+========================================================= */
+
+async function initializeDashboard() {
+  showElement(elements.loading);
+  hideElement(elements.loginRequired);
+  hideElement(elements.interface);
+
+  const sessionResult = await db.auth.getSession();
+
+  if (sessionResult.error) {
+    console.error(
+      "Unable to check login session:",
+      sessionResult.error
+    );
+
+    await handleSignedOutState();
+    return;
+  }
+
+  const user =
+    sessionResult.data?.session?.user || null;
+
+  if (!user) {
+    await handleSignedOutState();
+    return;
+  }
+
+  await handleSignedInState(user);
+}
+
+db.auth.onAuthStateChange(
+  async (event, session) => {
+    if (event === "SIGNED_OUT") {
+      await handleSignedOutState();
+      return;
+    }
+
+    if (
+      event === "SIGNED_IN" &&
+      session?.user
+    ) {
+      await handleSignedInState(session.user);
+    }
+  }
+);
+
+initializeDashboard();
