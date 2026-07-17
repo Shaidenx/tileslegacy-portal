@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Your Tiles Legacy Commander Dashboard. Track Command Pass progress, daily missions, collections, achievements, and rewards."
+  >
+
+  <title>Commander Dashboard | Tiles Legacy</title>
+
+  <link rel="stylesheet" href="dashboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="dashboard.js" defer></script>
+</head>
+
+<body>
+
+  <main class="dashboard-page">
+
+    <!-- =====================================================
+         DASHBOARD HERO
+    ====================================================== -->
+
+    <section class="dashboard-hero">
+
+      <div class="hero-grid"></div>
+
+      <div class="dashboard-shell hero-content">
+
+        <div class="hero-copy">
+
+          <p class="eyebrow">
+            Tiles Legacy Command Network
+          </p>
+
+          <h1>
+            Welcome Back,
+            <span id="commanderName">Commander</span>
+          </h1>
+
+          <p class="hero-description">
+            Your progression, missions, rewards, and Legacy
+            achievements are waiting.
+          </p>
+
+          <div class="hero-actions">
+
+            <a
+              class="primary-button"
+              href="command-pass.html"
+            >
+              Continue Command Pass
+            </a>
+
+            <button
+              class="secondary-button"
+              id="logoutButton"
+              type="button"
+            >
+              Log Out
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="commander-identity-card">
+
+          <div
+            class="commander-avatar-frame"
+            id="commanderAvatarFrame"
+          >
+
+            <div
+              class="commander-avatar"
+              id="commanderAvatar"
+            >
+              <span id="commanderInitial">C</span>
+            </div>
+
+          </div>
+
+          <p
+            class="commander-title"
+            id="commanderTitle"
+          >
+            Survivor
+          </p>
+
+          <h2 id="commanderDisplayName">
+            Commander
+          </h2>
+
+          <div class="commander-badge">
+            <span>Season 1</span>
+            <strong id="commanderPassLevel">
+              Level 1
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         DASHBOARD CONTENT
+    ====================================================== -->
+
+    <section class="dashboard-content">
+
+      <div class="dashboard-shell">
+
+        <!-- Loading -->
+
+        <div
+          class="dashboard-loading"
+          id="dashboardLoading"
+        >
+          <div class="loading-emblem">L</div>
+
+          <p>
+            Connecting to the Legacy Command Network...
+          </p>
+        </div>
+
+
+        <!-- Login Required -->
+
+        <div
+          class="login-required hidden"
+          id="loginRequired"
+        >
+
+          <span class="login-icon">🔒</span>
+
+          <h2>Commander Login Required</h2>
+
+          <p>
+            Sign in through the Commander Portal to view your
+            missions, Command Pass progress, collections, and
+            achievements.
+          </p>
+
+          <a
+            class="primary-button"
+            href="index.html"
+          >
+            Open Commander Portal
+          </a>
+
+        </div>
+
+
+        <!-- Authenticated Dashboard -->
+
+        <div
+          class="dashboard-interface hidden"
+          id="dashboardInterface"
+        >
+
+          <!-- =================================================
+               SUMMARY CARDS
+          ================================================== -->
+
+          <section
+            class="summary-grid"
+            aria-label="Commander statistics"
+          >
+
+            <article class="summary-card command-pass-summary">
+
+              <div class="summary-icon">⭐</div>
+
+              <div class="summary-copy">
+                <span>Command Pass</span>
+
+                <strong id="summaryPassLevel">
+                  Level 1
+                </strong>
+
+                <small id="summaryPassType">
+                  Free Pass
+                </small>
+              </div>
+
+            </article>
+
+
+            <article class="summary-card">
+
+              <div class="summary-icon">🎒</div>
+
+              <div class="summary-copy">
+                <span>Collection</span>
+
+                <strong id="summaryCollectionCount">
+                  0 Items
+                </strong>
+
+                <small>
+                  Permanent rewards
+                </small>
+              </div>
+
+            </article>
+
+
+            <article class="summary-card">
+
+              <div class="summary-icon">🏆</div>
+
+              <div class="summary-copy">
+                <span>Achievements</span>
+
+                <strong id="summaryAchievementCount">
+                  0 Unlocked
+                </strong>
+
+                <small id="summaryAchievementPoints">
+                  0 Points
+                </small>
+              </div>
+
+            </article>
+
+
+            <article class="summary-card">
+
+              <div class="summary-icon">👑</div>
+
+              <div class="summary-copy">
+                <span>Prestige</span>
+
+                <strong id="summaryPrestigeLevel">
+                  Level 0
+                </strong>
+
+                <small>
+                  Seasonal mastery
+                </small>
+              </div>
+
+            </article>
+
+          </section>
+
+
+          <!-- =================================================
+               COMMAND PASS PROGRESS
+          ================================================== -->
+
+          <section class="dashboard-panel pass-panel">
+
+            <div class="panel-heading">
+
+              <div>
+                <p class="section-label">
+                  Season 1
+                </p>
+
+                <h2>Dawn of Survival</h2>
+              </div>
+
+              <a
+                class="panel-link"
+                href="command-pass.html"
+              >
+                View Rewards
+              </a>
+
+            </div>
+
+            <div class="pass-progress-layout">
+
+              <div class="pass-level-emblem">
+
+                <span>LEVEL</span>
+
+                <strong id="passLevelNumber">
+                  1
+                </strong>
+
+              </div>
+
+              <div class="pass-progress-details">
+
+                <div class="progress-numbers">
+
+                  <span id="passXpText">
+                    0 / 100 XP
+                  </span>
+
+                  <strong id="passProgressPercent">
+                    0%
+                  </strong>
+
+                </div>
+
+                <div
+                  class="progress-bar-track"
+                  role="progressbar"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-valuenow="0"
+                  id="passProgressTrack"
+                >
+
+                  <div
+                    class="progress-bar-fill"
+                    id="passProgressBar"
+                  ></div>
+
+                </div>
+
+                <p id="nextRewardText">
+                  Earn XP to unlock your next reward.
+                </p>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- =================================================
+               DAILY MISSIONS
+          ================================================== -->
+
+          <section class="dashboard-panel missions-panel">
+
+            <div class="panel-heading">
+
+              <div>
+                <p class="section-label">
+                  Daily Operations
+                </p>
+
+                <h2>Today’s Missions</h2>
+              </div>
+
+              <div class="mission-reset">
+
+                <span>Daily XP</span>
+
+                <strong id="dailyXpAvailable">
+                  0 XP
+                </strong>
+
+              </div>
+
+            </div>
+
+            <div
+              class="missions-list"
+              id="missionsList"
+            >
+            </div>
+
+            <div
+              class="missions-empty hidden"
+              id="missionsEmpty"
+            >
+              No active missions are available today.
+            </div>
+
+          </section>
+
+
+          <!-- =================================================
+               LOWER DASHBOARD
+          ================================================== -->
+
+          <div class="lower-dashboard-grid">
+
+            <!-- Collection -->
+
+            <section class="dashboard-panel collection-panel">
+
+              <div class="panel-heading compact-heading">
+
+                <div>
+                  <p class="section-label">
+                    Your Arsenal
+                  </p>
+
+                  <h2>Collection</h2>
+                </div>
+
+                <span class="panel-symbol">🎒</span>
+
+              </div>
+
+              <div class="collection-number">
+
+                <strong id="collectionCountLarge">
+                  0
+                </strong>
+
+                <span>Collected Items</span>
+
+              </div>
+
+              <div class="collection-types">
+
+                <span>Avatars</span>
+                <span>Frames</span>
+                <span>Badges</span>
+                <span>Titles</span>
+
+              </div>
+
+              <button
+                class="dashboard-action-button"
+                id="viewCollectionButton"
+                type="button"
+              >
+                View Collection
+              </button>
+
+            </section>
+
+
+            <!-- Achievements -->
+
+            <section class="dashboard-panel achievement-panel">
+
+              <div class="panel-heading compact-heading">
+
+                <div>
+                  <p class="section-label">
+                    Legacy Record
+                  </p>
+
+                  <h2>Achievements</h2>
+                </div>
+
+                <span class="panel-symbol">🏆</span>
+
+              </div>
+
+              <div class="achievement-number">
+
+                <strong id="achievementCountLarge">
+                  0
+                </strong>
+
+                <span>Achievements Unlocked</span>
+
+              </div>
+
+              <div class="achievement-points">
+
+                <span>Total Achievement Points</span>
+
+                <strong id="achievementPointsLarge">
+                  0
+                </strong>
+
+              </div>
+
+              <button
+                class="dashboard-action-button"
+                id="viewAchievementsButton"
+                type="button"
+              >
+                View Achievements
+              </button>
+
+            </section>
+
+          </div>
+
+
+          <!-- =================================================
+               RECENT REWARD
+          ================================================== -->
+
+          <section class="dashboard-panel recent-reward-panel">
+
+            <div class="panel-heading">
+
+              <div>
+                <p class="section-label">
+                  Latest Acquisition
+                </p>
+
+                <h2>Recent Reward</h2>
+              </div>
+
+              <span class="panel-symbol">🎁</span>
+
+            </div>
+
+            <div
+              class="recent-reward-content"
+              id="recentRewardContent"
+            >
+
+              <div
+                class="recent-reward-art"
+                id="recentRewardArt"
+              >
+                🎁
+              </div>
+
+              <div class="recent-reward-copy">
+
+                <span id="recentRewardType">
+                  No reward collected
+                </span>
+
+                <h3 id="recentRewardName">
+                  Your first reward is waiting
+                </h3>
+
+                <p id="recentRewardSource">
+                  Progress through the Command Pass to begin
+                  building your collection.
+                </p>
+
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- =================================================
+               QUICK LINKS
+          ================================================== -->
+
+          <section class="quick-links-section">
+
+            <div class="quick-links-heading">
+
+              <p class="section-label">
+                Commander Navigation
+              </p>
+
+              <h2>Continue Your Journey</h2>
+
+            </div>
+
+            <div class="quick-links-grid">
+
+              <a
+                class="quick-link-card"
+                href="command-pass.html"
+              >
+                <span>⭐</span>
+
+                <div>
+                  <strong>Command Pass</strong>
+                  <small>View all Season 1 rewards</small>
+                </div>
+              </a>
+
+
+              <button
+                class="quick-link-card"
+                id="quickCollectionButton"
+                type="button"
+              >
+                <span>🎒</span>
+
+                <div>
+                  <strong>Collection</strong>
+                  <small>Browse your unlocked items</small>
+                </div>
+              </button>
+
+
+              <button
+                class="quick-link-card"
+                id="quickAchievementsButton"
+                type="button"
+              >
+                <span>🏆</span>
+
+                <div>
+                  <strong>Achievements</strong>
+                  <small>Review your accomplishments</small>
+                </div>
+              </button>
+
+
+              <a
+                class="quick-link-card"
+                href="index.html"
+              >
+                <span>⚙️</span>
+
+                <div>
+                  <strong>Commander Portal</strong>
+                  <small>Manage your account and profile</small>
+                </div>
+              </a>
+
+            </div>
+
+          </section>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       MESSAGE MODAL
+  ====================================================== -->
+
+  <div
+    class="dashboard-modal hidden"
+    id="dashboardModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="dashboardModalTitle"
+  >
+
+    <div class="dashboard-modal-card">
+
+      <button
+        class="modal-close"
+        id="closeDashboardModal"
+        type="button"
+        aria-label="Close message"
+      >
+        ×
+      </button>
+
+      <div
+        class="modal-icon"
+        id="dashboardModalIcon"
+      >
+        ⚔️
+      </div>
+
+      <h2 id="dashboardModalTitle">
+        Feature Coming Soon
+      </h2>
+
+      <p id="dashboardModalMessage">
+        This Tiles Legacy feature is currently being activated.
+      </p>
+
+      <button
+        class="primary-button modal-action"
+        id="dashboardModalAction"
+        type="button"
+      >
+        Continue
+      </button>
+
+    </div>
+
+  </div>
+
+</body>
+            </html>
