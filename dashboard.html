@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="dashboard.css?v=3">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="dashboard.js?v=4" defer></script>
+  <script src="dashboard.js?v=5" defer></script>
 </head>
 
 <body>
@@ -28,146 +28,12 @@
   <main class="dashboard-page">
 
     <!-- =====================================================
-         HERO / COMMANDER IDENTITY
-    ====================================================== -->
-
-    <section class="dashboard-hero">
-
-      <div class="hero-grid" aria-hidden="true"></div>
-      <div class="hero-glow hero-glow-left" aria-hidden="true"></div>
-      <div class="hero-glow hero-glow-right" aria-hidden="true"></div>
-
-      <div class="dashboard-shell hero-content">
-
-        <div class="hero-copy">
-
-          <div class="network-status">
-            <span class="network-status-dot"></span>
-            <span>Legacy Command Network Online</span>
-          </div>
-
-          <p class="eyebrow">
-            Tiles Legacy Commander System
-          </p>
-
-          <h1>
-            Welcome Back,
-            <span id="commanderName">Commander</span>
-          </h1>
-
-          <p class="hero-description">
-            Continue your seasonal progression, complete missions,
-            unlock rewards, and build your permanent Legacy collection.
-          </p>
-
-          <div class="hero-actions">
-
-            <a
-              class="primary-button"
-              href="command-pass.html"
-            >
-              <span>Continue Command Pass</span>
-              <span aria-hidden="true">›</span>
-            </a>
-
-            <button
-              class="secondary-button"
-              id="logoutButton"
-              type="button"
-            >
-              Log Out
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <aside
-          class="commander-identity-card"
-          aria-label="Commander profile"
-        >
-
-          <div class="identity-card-header">
-
-            <span class="identity-status">
-              Active Commander
-            </span>
-
-            <span class="identity-season">
-              Season 1
-            </span>
-
-          </div>
-
-          <div
-            class="commander-avatar-frame"
-            id="commanderAvatarFrame"
-          >
-
-            <div
-              class="commander-avatar"
-              id="commanderAvatar"
-            >
-              <span id="commanderInitial">C</span>
-            </div>
-
-          </div>
-
-          <div class="commander-identity-copy">
-
-            <p
-              class="commander-title"
-              id="commanderTitle"
-            >
-              Survivor
-            </p>
-
-            <h2 id="commanderDisplayName">
-              Commander
-            </h2>
-
-            <p class="identity-subtitle">
-              Tiles Legacy Command Network
-            </p>
-
-          </div>
-
-          <div class="commander-badge">
-
-            <div>
-              <span>Command Pass</span>
-
-              <strong id="commanderPassLevel">
-                Level 1
-              </strong>
-            </div>
-
-            <span class="badge-chevron" aria-hidden="true">
-              ›
-            </span>
-
-          </div>
-
-        </aside>
-
-      </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         DASHBOARD BODY
+         LOADING STATE
     ====================================================== -->
 
     <section class="dashboard-content">
 
       <div class="dashboard-shell">
-
-
-        <!-- =================================================
-             LOADING STATE
-        ================================================== -->
 
         <div
           class="dashboard-loading"
@@ -179,11 +45,13 @@
           </div>
 
           <div class="loading-copy">
+
             <h2>Accessing Commander Records</h2>
 
             <p>
               Connecting to the Legacy Command Network...
             </p>
+
           </div>
 
           <div class="loading-bar" aria-hidden="true">
@@ -210,12 +78,12 @@
             Restricted Network
           </p>
 
-          <h2>Commander Login Required</h2>
+          <h1>Commander Login Required</h1>
 
           <p>
             Sign in through the Commander Portal to access your
-            missions, rewards, Command Pass progression, collection,
-            and achievement records.
+            profile, missions, rewards, Command Pass progression,
+            collection, and achievement records.
           </p>
 
           <a
@@ -227,42 +95,223 @@
 
         </div>
 
+      </div>
 
-        <!-- =================================================
-             AUTHENTICATED INTERFACE
-        ================================================== -->
+    </section>
+
+
+    <!-- =====================================================
+         AUTHENTICATED DASHBOARD
+         EVERYTHING INSIDE THIS AREA REQUIRES LOGIN
+    ====================================================== -->
+
+    <div
+      class="dashboard-interface hidden"
+      id="dashboardInterface"
+    >
+
+      <!-- ===================================================
+           HERO / COMMANDER IDENTITY
+      ==================================================== -->
+
+      <section class="dashboard-hero">
 
         <div
-          class="dashboard-interface hidden"
-          id="dashboardInterface"
-        >
+          class="hero-grid"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="hero-glow hero-glow-left"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="hero-glow hero-glow-right"
+          aria-hidden="true"
+        ></div>
+
+        <div class="dashboard-shell hero-content">
+
+          <div class="hero-copy">
+
+            <div class="network-status">
+
+              <span class="network-status-dot"></span>
+
+              <span>
+                Legacy Command Network Online
+              </span>
+
+            </div>
+
+            <p class="eyebrow">
+              Tiles Legacy Commander System
+            </p>
+
+            <h1>
+              Welcome Back,
+              <span id="commanderName">
+                Commander
+              </span>
+            </h1>
+
+            <p class="hero-description">
+              Continue your seasonal progression, complete missions,
+              unlock rewards, and build your permanent Legacy collection.
+            </p>
+
+            <div class="hero-actions">
+
+              <a
+                class="primary-button"
+                href="command-pass.html"
+              >
+                <span>Continue Command Pass</span>
+                <span aria-hidden="true">›</span>
+              </a>
+
+              <button
+                class="secondary-button"
+                id="logoutButton"
+                type="button"
+              >
+                Log Out
+              </button>
+
+            </div>
+
+          </div>
 
 
-          <!-- =============================================
-               COMMAND OVERVIEW
-          ============================================== -->
+          <!-- COMMANDER CARD -->
+
+          <aside
+            class="commander-identity-card"
+            aria-label="Commander profile"
+          >
+
+            <div class="identity-card-header">
+
+              <span class="identity-status">
+                Active Commander
+              </span>
+
+              <span class="identity-season">
+                Season 1
+              </span>
+
+            </div>
+
+            <div
+              class="commander-avatar-frame"
+              id="commanderAvatarFrame"
+            >
+
+              <div
+                class="commander-avatar"
+                id="commanderAvatar"
+              >
+
+                <span id="commanderInitial">
+                  C
+                </span>
+
+              </div>
+
+            </div>
+
+            <div class="commander-identity-copy">
+
+              <p
+                class="commander-title"
+                id="commanderTitle"
+              >
+                Survivor
+              </p>
+
+              <h2 id="commanderDisplayName">
+                Commander
+              </h2>
+
+              <p class="identity-subtitle">
+                Tiles Legacy Command Network
+              </p>
+
+            </div>
+
+            <div class="commander-badge">
+
+              <div>
+
+                <span>
+                  Command Pass
+                </span>
+
+                <strong id="commanderPassLevel">
+                  Level 1
+                </strong>
+
+              </div>
+
+              <span
+                class="badge-chevron"
+                aria-hidden="true"
+              >
+                ›
+              </span>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           DASHBOARD CONTENT
+      ==================================================== -->
+
+      <section class="dashboard-content">
+
+        <div class="dashboard-shell">
+
+          <!-- =================================================
+               COMMANDER OVERVIEW
+          ================================================== -->
 
           <header class="dashboard-section-header">
 
             <div>
+
               <p class="section-label">
                 Commander Overview
               </p>
 
-              <h2>Your Legacy at a Glance</h2>
+              <h2>
+                Your Legacy at a Glance
+              </h2>
+
             </div>
 
             <div class="dashboard-date-status">
+
               <span class="status-indicator"></span>
-              <span>Profile Synchronized</span>
+
+              <span>
+                Profile Synchronized
+              </span>
+
             </div>
 
           </header>
 
 
-          <!-- =============================================
+          <!-- =================================================
                SUMMARY CARDS
-          ============================================== -->
+          ================================================== -->
 
           <section
             class="summary-grid"
@@ -403,34 +452,38 @@
           </section>
 
 
-          <!-- =============================================
+          <!-- =================================================
                PRIMARY DASHBOARD GRID
-          ============================================== -->
+          ================================================== -->
 
           <div class="primary-dashboard-grid">
 
-
-            <!-- =========================================
-                 COMMAND PASS
-            ========================================== -->
+            <!-- COMMAND PASS -->
 
             <section class="dashboard-panel pass-panel">
 
-              <div class="panel-decoration" aria-hidden="true"></div>
+              <div
+                class="panel-decoration"
+                aria-hidden="true"
+              ></div>
 
               <div class="panel-heading">
 
                 <div>
+
                   <p class="section-label">
                     Season 1
                   </p>
 
-                  <h2>Dawn of Survival</h2>
+                  <h2>
+                    Dawn of Survival
+                  </h2>
 
                   <p class="panel-description">
                     Earn experience, advance through the season,
                     and unlock exclusive Legacy rewards.
                   </p>
+
                 </div>
 
                 <a
@@ -447,7 +500,9 @@
 
                 <div class="pass-level-emblem">
 
-                  <span>Level</span>
+                  <span>
+                    Level
+                  </span>
 
                   <strong id="passLevelNumber">
                     1
@@ -464,6 +519,7 @@
                   <div class="progress-header">
 
                     <div>
+
                       <span class="progress-label">
                         Level Progress
                       </span>
@@ -471,6 +527,7 @@
                       <strong id="passXpText">
                         0 / 100 XP
                       </strong>
+
                     </div>
 
                     <span id="passProgressPercent">
@@ -481,11 +538,11 @@
 
                   <div
                     class="progress-bar-track"
+                    id="passProgressTrack"
                     role="progressbar"
                     aria-valuemin="0"
                     aria-valuemax="100"
                     aria-valuenow="0"
-                    id="passProgressTrack"
                   >
 
                     <div
@@ -514,20 +571,22 @@
             </section>
 
 
-            <!-- =========================================
-                 SEASON STATUS
-            ========================================== -->
+            <!-- SEASON STATUS -->
 
             <aside class="dashboard-panel season-status-panel">
 
               <div class="panel-heading compact-heading">
 
                 <div>
+
                   <p class="section-label">
                     Season Status
                   </p>
 
-                  <h2>Current Campaign</h2>
+                  <h2>
+                    Current Campaign
+                  </h2>
+
                 </div>
 
                 <span class="panel-symbol">
@@ -539,13 +598,22 @@
               <div class="season-status-content">
 
                 <div class="season-number">
-                  <span>Season</span>
-                  <strong>01</strong>
+
+                  <span>
+                    Season
+                  </span>
+
+                  <strong>
+                    01
+                  </strong>
+
                 </div>
 
                 <div class="season-details">
 
-                  <h3>Dawn of Survival</h3>
+                  <h3>
+                    Dawn of Survival
+                  </h3>
 
                   <p>
                     Survival, rebuilding, and the rise of the first heroes.
@@ -558,20 +626,39 @@
               <div class="season-status-list">
 
                 <div>
-                  <span>Campaign Status</span>
-                  <strong class="status-active">Active</strong>
+
+                  <span>
+                    Campaign Status
+                  </span>
+
+                  <strong class="status-active">
+                    Active
+                  </strong>
+
                 </div>
 
                 <div>
-                  <span>Commander Enrollment</span>
-                  <strong>Confirmed</strong>
+
+                  <span>
+                    Commander Enrollment
+                  </span>
+
+                  <strong>
+                    Confirmed
+                  </strong>
+
                 </div>
 
                 <div>
-                  <span>Reward Track</span>
+
+                  <span>
+                    Reward Track
+                  </span>
+
                   <strong id="summaryPassTypeSecondary">
                     Free Pass
                   </strong>
+
                 </div>
 
               </div>
@@ -581,9 +668,9 @@
           </div>
 
 
-          <!-- =============================================
+          <!-- =================================================
                DAILY MISSIONS
-          ============================================== -->
+          ================================================== -->
 
           <section class="dashboard-panel missions-panel">
 
@@ -595,7 +682,9 @@
                   Daily Operations
                 </p>
 
-                <h2>Today’s Missions</h2>
+                <h2>
+                  Today’s Missions
+                </h2>
 
                 <p class="panel-description">
                   Complete your active objectives to earn Command Pass XP.
@@ -605,7 +694,9 @@
 
               <div class="mission-reset">
 
-                <span>Available Today</span>
+                <span>
+                  Available Today
+                </span>
 
                 <strong id="dailyXpAvailable">
                   0 XP
@@ -629,7 +720,9 @@
                 ✓
               </div>
 
-              <h3>No Active Missions</h3>
+              <h3>
+                No Active Missions
+              </h3>
 
               <p>
                 No daily operations are currently available.
@@ -641,12 +734,11 @@
           </section>
 
 
-          <!-- =============================================
+          <!-- =================================================
                COLLECTION AND ACHIEVEMENTS
-          ============================================== -->
+          ================================================== -->
 
           <div class="lower-dashboard-grid">
-
 
             <!-- COLLECTION -->
 
@@ -655,11 +747,15 @@
               <div class="panel-heading compact-heading">
 
                 <div>
+
                   <p class="section-label">
                     Commander Arsenal
                   </p>
 
-                  <h2>Collection</h2>
+                  <h2>
+                    Collection
+                  </h2>
+
                 </div>
 
                 <span class="panel-symbol">
@@ -679,7 +775,9 @@
                   0
                 </strong>
 
-                <span>Collected Items</span>
+                <span>
+                  Collected Items
+                </span>
 
               </div>
 
@@ -712,8 +810,13 @@
                 id="viewCollectionButton"
                 type="button"
               >
-                <span>View Collection</span>
-                <span aria-hidden="true">›</span>
+                <span>
+                  View Collection
+                </span>
+
+                <span aria-hidden="true">
+                  ›
+                </span>
               </button>
 
             </section>
@@ -726,11 +829,15 @@
               <div class="panel-heading compact-heading">
 
                 <div>
+
                   <p class="section-label">
                     Legacy Record
                   </p>
 
-                  <h2>Achievements</h2>
+                  <h2>
+                    Achievements
+                  </h2>
+
                 </div>
 
                 <span class="panel-symbol">
@@ -750,13 +857,17 @@
                   0
                 </strong>
 
-                <span>Achievements Unlocked</span>
+                <span>
+                  Achievements Unlocked
+                </span>
 
               </div>
 
               <div class="achievement-points">
 
-                <span>Total Achievement Points</span>
+                <span>
+                  Total Achievement Points
+                </span>
 
                 <strong id="achievementPointsLarge">
                   0
@@ -769,8 +880,13 @@
                 id="viewAchievementsButton"
                 type="button"
               >
-                <span>View Achievements</span>
-                <span aria-hidden="true">›</span>
+                <span>
+                  View Achievements
+                </span>
+
+                <span aria-hidden="true">
+                  ›
+                </span>
               </button>
 
             </section>
@@ -778,9 +894,9 @@
           </div>
 
 
-          <!-- =============================================
+          <!-- =================================================
                RECENT REWARD
-          ============================================== -->
+          ================================================== -->
 
           <section class="dashboard-panel recent-reward-panel">
 
@@ -792,7 +908,9 @@
                   Latest Acquisition
                 </p>
 
-                <h2>Recent Reward</h2>
+                <h2>
+                  Recent Reward
+                </h2>
 
               </div>
 
@@ -825,8 +943,8 @@
                 </h3>
 
                 <p id="recentRewardSource">
-                  Progress through the Command Pass and complete
-                  missions to begin building your collection.
+                  Progress through the Command Pass and complete missions
+                  to begin building your collection.
                 </p>
 
               </div>
@@ -844,20 +962,24 @@
           </section>
 
 
-          <!-- =============================================
+          <!-- =================================================
                QUICK NAVIGATION
-          ============================================== -->
+          ================================================== -->
 
           <section class="quick-links-section">
 
             <div class="quick-links-heading">
 
               <div>
+
                 <p class="section-label">
                   Commander Navigation
                 </p>
 
-                <h2>Continue Your Journey</h2>
+                <h2>
+                  Continue Your Journey
+                </h2>
+
               </div>
 
               <p>
@@ -878,11 +1000,21 @@
                 </span>
 
                 <div>
-                  <strong>Command Pass</strong>
-                  <small>View Season 1 progression and rewards</small>
+
+                  <strong>
+                    Command Pass
+                  </strong>
+
+                  <small>
+                    View Season 1 progression and rewards
+                  </small>
+
                 </div>
 
-                <span class="quick-link-arrow" aria-hidden="true">
+                <span
+                  class="quick-link-arrow"
+                  aria-hidden="true"
+                >
                   ›
                 </span>
 
@@ -900,11 +1032,21 @@
                 </span>
 
                 <div>
-                  <strong>Collection</strong>
-                  <small>Browse your permanent unlocked items</small>
+
+                  <strong>
+                    Collection
+                  </strong>
+
+                  <small>
+                    Browse your permanent unlocked items
+                  </small>
+
                 </div>
 
-                <span class="quick-link-arrow" aria-hidden="true">
+                <span
+                  class="quick-link-arrow"
+                  aria-hidden="true"
+                >
                   ›
                 </span>
 
@@ -922,11 +1064,21 @@
                 </span>
 
                 <div>
-                  <strong>Achievements</strong>
-                  <small>Review milestones and Legacy points</small>
+
+                  <strong>
+                    Achievements
+                  </strong>
+
+                  <small>
+                    Review milestones and Legacy points
+                  </small>
+
                 </div>
 
-                <span class="quick-link-arrow" aria-hidden="true">
+                <span
+                  class="quick-link-arrow"
+                  aria-hidden="true"
+                >
                   ›
                 </span>
 
@@ -943,11 +1095,21 @@
                 </span>
 
                 <div>
-                  <strong>Commander Portal</strong>
-                  <small>Manage your account and profile</small>
+
+                  <strong>
+                    Commander Portal
+                  </strong>
+
+                  <small>
+                    Manage your account and profile
+                  </small>
+
                 </div>
 
-                <span class="quick-link-arrow" aria-hidden="true">
+                <span
+                  class="quick-link-arrow"
+                  aria-hidden="true"
+                >
                   ›
                 </span>
 
@@ -959,9 +1121,9 @@
 
         </div>
 
-      </div>
+      </section>
 
-    </section>
+    </div>
 
   </main>
 
