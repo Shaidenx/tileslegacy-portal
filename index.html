@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Tiles Legacy Commander Portal"
+  >
+
+  <title>Tiles Legacy Commander Portal</title>
+
+  <link rel="stylesheet" href="styles.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+
+  <main class="portal-shell">
+
+    <header class="portal-header">
+      <div class="brand-mark">TL</div>
+
+      <div>
+        <p class="eyebrow">TILES LEGACY</p>
+        <h1>Commander Portal</h1>
+      </div>
+    </header>
+
+    <p id="statusMessage" class="status-message">
+      Loading secure portal...
+    </p>
+
+    <!-- LOGIN AND SIGNUP -->
+
+    <section id="authSection" class="panel auth-panel hidden">
+
+      <div class="panel-heading">
+        <p class="eyebrow">SECURE ACCESS</p>
+        <h2>Enter the Legacy Network</h2>
+        <p>
+          Log in to your Commander profile or create a new Legacy ID.
+        </p>
+      </div>
+
+      <label for="commanderName">Commander Name</label>
+      <input
+        id="commanderName"
+        type="text"
+        placeholder="Required for new accounts"
+        autocomplete="nickname"
+      >
+
+      <label for="email">Email Address</label>
+      <input
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        autocomplete="email"
+      >
+
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        placeholder="Enter your password"
+        autocomplete="current-password"
+      >
+
+      <button id="loginButton" class="primary-button">
+        Log In
+      </button>
+
+      <button id="signupButton" class="secondary-button">
+        Create New Legacy ID
+      </button>
+
+    </section>
+
+    <!-- COMMANDER DASHBOARD -->
+
+    <section id="dashboardSection" class="hidden">
+
+      <section class="commander-card panel">
+
+        <div class="avatar-frame">
+          <img
+            id="commanderAvatar"
+            src=""
+            alt="Commander avatar"
+            class="commander-avatar hidden"
+          >
+
+          <div id="avatarPlaceholder" class="avatar-placeholder">
+            TL
+          </div>
+        </div>
+
+        <div class="commander-info">
+
+          <p class="eyebrow">AUTHENTICATED COMMANDER</p>
+
+          <h2 id="commanderDisplayName">
+            Loading...
+          </h2>
+
+          <p id="legacyId" class="legacy-id">
+            —
+          </p>
+
+          <p class="active-session">
+            <span class="online-dot"></span>
+            Secure session active
+          </p>
+
+        </div>
+
+      </section>
+
+      <!-- LEVEL AND XP -->
+
+      <section class="panel progress-panel">
+
+        <div class="progress-header">
+
+          <div>
+            <p class="small-label">COMMANDER LEVEL</p>
+            <strong id="commanderLevel">1</strong>
+          </div>
+
+          <div class="progress-numbers">
+            <span id="commanderXp">0</span>
+            <span>/</span>
+            <span id="nextLevelXp">100</span>
+            <span>XP</span>
+          </div>
+
+        </div>
+
+        <div class="progress-track">
+          <div id="xpProgressBar" class="progress-bar"></div>
+        </div>
+
+      </section>
+
+      <!-- MAIN NAVIGATION -->
+
+      <nav class="feature-grid">
+
+        <button class="feature-card active" data-section="profilePanel">
+          <span class="feature-icon">👤</span>
+          <span>Profile</span>
+        </button>
+
+        <button class="feature-card" data-section="inventoryPanel">
+          <span class="feature-icon">🎒</span>
+          <span>Inventory</span>
+        </button>
+
+        <button class="feature-card" data-section="commandPassPanel">
+          <span class="feature-icon">🎖️</span>
+          <span>Command Pass</span>
+        </button>
+
+        <button class="feature-card" data-section="achievementsPanel">
+          <span class="feature-icon">🏆</span>
+          <span>Achievements</span>
+        </button>
+
+        <button class="feature-card" data-section="statisticsPanel">
+          <span class="feature-icon">📊</span>
+          <span>Statistics</span>
+        </button>
+
+        <button class="feature-card" data-section="alliancePanel">
+          <span class="feature-icon">⚔️</span>
+          <span>Alliance</span>
+        </button>
+
+        <button class="feature-card" data-section="rewardsPanel">
+          <span class="feature-icon">🎁</span>
+          <span>Daily Reward</span>
+        </button>
+
+        <button class="feature-card" data-section="redeemPanel">
+          <span class="feature-icon">🎟️</span>
+          <span>Redeem Code</span>
+        </button>
+
+        <button class="feature-card" data-section="settingsPanel">
+          <span class="feature-icon">⚙️</span>
+          <span>Settings</span>
+        </button>
+
+      </nav>
+
+      <!-- PROFILE -->
+
+      <section id="profilePanel" class="content-panel panel">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">COMMANDER RECORD</p>
+            <h2>Profile</h2>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+
+          <div class="stat-card">
+            <span class="small-label">LEGACY ID</span>
+            <strong id="profileLegacyId">—</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="small-label">LEVEL</span>
+            <strong id="profileLevel">1</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="small-label">COMMANDER XP</span>
+            <strong id="profileXp">0</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="small-label">ACCOUNT</span>
+            <strong class="green-text">ACTIVE</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- INVENTORY -->
+
+      <section id="inventoryPanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">COLLECTED ITEMS</p>
+            <h2>Commander Inventory</h2>
+          </div>
+
+          <span id="inventoryCount" class="count-badge">
+            0 Items
+          </span>
+        </div>
+
+        <div id="inventoryFilters" class="filter-row">
+
+          <button class="filter-button active" data-filter="all">
+            All
+          </button>
+
+          <button class="filter-button" data-filter="avatar">
+            Avatars
+          </button>
+
+          <button class="filter-button" data-filter="frame">
+            Frames
+          </button>
+
+          <button class="filter-button" data-filter="badge">
+            Badges
+          </button>
+
+          <button class="filter-button" data-filter="title">
+            Titles
+          </button>
+
+          <button class="filter-button" data-filter="background">
+            Backgrounds
+          </button>
+
+          <button class="filter-button" data-filter="theme">
+            Themes
+          </button>
+
+        </div>
+
+        <div id="inventoryGrid" class="inventory-grid"></div>
+
+        <div id="emptyInventory" class="empty-state hidden">
+          <span>🎒</span>
+          <h3>No inventory items found</h3>
+          <p>
+            Earn rewards through events, achievements and the Command Pass.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- COMMAND PASS -->
+
+      <section id="commandPassPanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">SEASON ONE</p>
+            <h2>Dawn of Survival</h2>
+          </div>
+
+          <span id="passType" class="count-badge">
+            Free Pass
+          </span>
+        </div>
+
+        <div class="pass-level-display">
+
+          <div>
+            <span class="small-label">PASS LEVEL</span>
+            <strong id="passLevel">1</strong>
+          </div>
+
+          <div>
+            <span class="small-label">PASS XP</span>
+            <strong id="passXp">0</strong>
+          </div>
+
+          <div>
+            <span class="small-label">PRESTIGE</span>
+            <strong id="prestigeLevel">0</strong>
+          </div>
+
+        </div>
+
+        <div class="progress-track">
+          <div id="passProgressBar" class="progress-bar"></div>
+        </div>
+
+        <p class="coming-soon-text">
+          Seasonal reward tiers will appear here.
+        </p>
+
+      </section>
+
+      <!-- ACHIEVEMENTS -->
+
+      <section id="achievementsPanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">LEGACY MILESTONES</p>
+            <h2>Achievements</h2>
+          </div>
+        </div>
+
+        <div class="empty-state">
+          <span>🏆</span>
+          <h3>Achievements are coming soon</h3>
+          <p>
+            Complete challenges to earn XP, badges, titles and exclusive rewards.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- STATISTICS -->
+
+      <section id="statisticsPanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">COMMANDER DATA</p>
+            <h2>Statistics</h2>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+
+          <div class="stat-card">
+            <span class="small-label">LOGIN STREAK</span>
+            <strong id="loginStreak">0</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="small-label">REWARDS CLAIMED</span>
+            <strong id="rewardsClaimed">0</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="small-label">ACHIEVEMENTS</span>
+            <strong id="achievementCount">0</strong>
+          </div>
+
+          <div class="stat-card">
+            <span class="small-label">ITEMS OWNED</span>
+            <strong id="itemsOwned">0</strong>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ALLIANCE -->
+
+      <section id="alliancePanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">ALLIANCE RECORD</p>
+            <h2>Legacy</h2>
+          </div>
+        </div>
+
+        <div class="alliance-banner">
+
+          <div class="alliance-emblem">
+            L
+          </div>
+
+          <div>
+            <h3>Legacy Alliance</h3>
+            <p>
+              Strength through discipline, loyalty and unity.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- DAILY REWARD -->
+
+      <section id="rewardsPanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">DAILY LOGIN</p>
+            <h2>Commander Reward</h2>
+          </div>
+        </div>
+
+        <div class="reward-box">
+
+          <div class="reward-icon">🎁</div>
+
+          <h3>Daily Supply Crate</h3>
+
+          <p id="dailyRewardText">
+            Check in each day to build your reward streak.
+          </p>
+
+          <button id="claimRewardButton" class="primary-button">
+            Claim Daily Reward
+          </button>
+
+        </div>
+
+      </section>
+
+      <!-- REDEEM CODE -->
+
+      <section id="redeemPanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">REWARD TERMINAL</p>
+            <h2>Redeem Code</h2>
+          </div>
+        </div>
+
+        <label for="redeemCode">Enter Code</label>
+
+        <input
+          id="redeemCode"
+          type="text"
+          placeholder="Enter your reward code"
+          autocomplete="off"
+        >
+
+        <button id="redeemButton" class="primary-button">
+          Redeem Reward
+        </button>
+
+        <p id="redeemMessage" class="inline-message"></p>
+
+      </section>
+
+      <!-- SETTINGS -->
+
+      <section id="settingsPanel" class="content-panel panel hidden">
+
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">ACCOUNT CONTROL</p>
+            <h2>Settings</h2>
+          </div>
+        </div>
+
+        <label class="setting-row">
+
+          <span>
+            <strong>Public Profile</strong>
+            <small>
+              Allow other players to view your Commander profile.
+            </small>
+          </span>
+
+          <input id="publicProfileToggle" type="checkbox">
+
+        </label>
+
+        <button id="saveSettingsButton" class="primary-button">
+          Save Settings
+        </button>
+
+      </section>
+
+      <button id="logoutButton" class="logout-button">
+        Log Out
+      </button>
+
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+
+</body>
+</html>
