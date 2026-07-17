@@ -800,7 +800,7 @@ db.auth.onAuthStateChange(
 bindNavigation();
 bindInventoryFilters();
 checkCurrentSession();
-async function loadCommandPass() {
+async function loadCommandPassRewards() {
 
     const loading = document.getElementById("commandPassLoading");
     const container = document.getElementById("commandPassRewards");
