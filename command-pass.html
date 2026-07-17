@@ -13,6 +13,97 @@
   <link rel="stylesheet" href="command-pass.css">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+@media (max-width: 900px) {
+  .dashboard-hero {
+    min-height: auto !important;
+  }
+
+  .hero-content {
+    width: calc(100% - 24px) !important;
+    padding: 50px 0 70px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 32px !important;
+  }
+
+  .hero-copy {
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: center !important;
+  }
+
+  .eyebrow {
+    text-align: center !important;
+  }
+
+  .hero-copy h1 {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: 44px !important;
+    line-height: 1 !important;
+    letter-spacing: -1px !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .hero-copy h1 span {
+    display: block !important;
+    margin-top: 8px !important;
+  }
+
+  .hero-description {
+    width: 100% !important;
+    max-width: 390px !important;
+    margin: 22px auto 0 !important;
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    text-align: center !important;
+    word-break: normal !important;
+  }
+
+  .hero-actions {
+    width: 100% !important;
+    margin-top: 26px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .hero-actions a,
+  .hero-actions button {
+    width: 100% !important;
+    max-width: 390px !important;
+    margin: 0 auto !important;
+  }
+
+  .commander-identity-card {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 390px !important;
+    margin: 0 auto !important;
+    padding: 28px 20px !important;
+  }
+
+  .dashboard-content > .dashboard-shell {
+    margin-top: -24px !important;
+  }
+
+  .summary-grid,
+  .lower-dashboard-grid,
+  .quick-links-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-copy h1 {
+    font-size: 40px !important;
+  }
+}
+</style>
 </head>
 
 <body>
