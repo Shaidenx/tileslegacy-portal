@@ -1071,3 +1071,116 @@ button.quick-link-card {
 .quick-link-card:hover {
   transform: translateY(-3px);
   border-color: rgba(229, 184, 7
+/* =========================================================
+   EMERGENCY MOBILE LAYOUT FIX
+========================================================= */
+
+@media screen and (max-width: 800px) {
+
+  .dashboard-hero {
+    min-height: auto !important;
+  }
+
+  .hero-content {
+    width: calc(100% - 28px) !important;
+    padding: 55px 0 75px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 35px !important;
+  }
+
+  .hero-copy {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .eyebrow {
+    margin-bottom: 18px !important;
+    text-align: center !important;
+  }
+
+  .hero-copy h1 {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: clamp(2.5rem, 13vw, 4rem) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -2px !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+  }
+
+  .hero-copy h1 span {
+    display: block !important;
+    margin-top: 8px !important;
+  }
+
+  .hero-description {
+    width: 100% !important;
+    max-width: 420px !important;
+    margin: 22px auto 0 !important;
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+    text-align: center !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  .commander-identity-card {
+    width: 100% !important;
+    max-width: 390px !important;
+    margin: 0 auto !important;
+    padding: 27px 20px !important;
+  }
+
+  .commander-avatar-frame {
+    width: 128px !important;
+    height: 128px !important;
+  }
+
+  .hero-actions {
+    width: 100% !important;
+    margin-top: 27px !important;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 11px !important;
+  }
+
+  .hero-actions .primary-button,
+  .hero-actions .secondary-button {
+    width: 100% !important;
+    max-width: 390px !important;
+    margin: 0 auto !important;
+  }
+
+  .dashboard-content > .dashboard-shell {
+    margin-top: -25px !important;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .lower-dashboard-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .quick-links-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media screen and (max-width: 430px) {
+
+  .hero-copy h1 {
+    font-size: 2.65rem !important;
+  }
+
+  .summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dashboard-shell {
+    width: calc(100% - 20px) !important;
+  }
+}
